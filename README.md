@@ -7,7 +7,7 @@ Currently only Windows is suported, tested and built for Windows 10
 The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/releases/latest)  
   
 ## Credit
-[Inno Setup](https://jrsoftware.org/isinfo.php)  
+[Inno Setup](https://github.com/jrsoftware/issrc)  
 [Ookii Dialogs](https://github.com/ookii-dialogs/ookii-dialogs-wpf)
   
 ## FAQ  
