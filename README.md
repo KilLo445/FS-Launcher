@@ -3,6 +3,9 @@ FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's G
 ## Download
 The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/releases/latest)  
   
-Installer made with [Inno Setup](https://jrsoftware.org/isinfo.php)
+## Credit
+[Inno Setup](https://jrsoftware.org/isinfo.php)  
+[Ookii Dialogs](https://github.com/ookii-dialogs/ookii-dialogs-wpf)
   
+## Other Stuff
 More will be added to the read me later.
