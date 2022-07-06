@@ -11,7 +11,7 @@ The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/r
 [Ookii Dialogs](https://github.com/ookii-dialogs/ookii-dialogs-wpf)
   
 ## FAQ  
-Q: How do I change my install location/store?
-A: Hold Left Shift while opening the launcher.
+Q: How do I change my install location/store?  
+A: Hold Left Shift while opening the launcher.  
   
 ### More will be added to the read me later.
