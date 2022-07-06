@@ -10,5 +10,8 @@ The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/r
 [Inno Setup](https://jrsoftware.org/isinfo.php)  
 [Ookii Dialogs](https://github.com/ookii-dialogs/ookii-dialogs-wpf)
   
-## Other Stuff
-More will be added to the read me later.
+## FAQ  
+Q: How do I change my install location/store?
+A: Hold Left Shift while opening the launcher.
+  
+### More will be added to the read me later.
