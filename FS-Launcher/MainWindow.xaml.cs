@@ -68,14 +68,14 @@ namespace FS_Launcher
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             CheckForUpdates();
-
-            MessageBox.Show("Please Note:\n\nThis program is still in development, and I am not amazing at coding, so updates and new features may be slow, but they will be released.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void FirstRun()
         {
             if (!File.Exists(firstRunFile))
             {
+                MessageBox.Show("Please Note:\n\nThis program is still in development, and I am not amazing at coding, so updates and new features may be slow, but they will be released.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 var firstRunTxt = File.Create(firstRunFile);
                 firstRunTxt.Close();
                 File.WriteAllText(firstRunFile, "FirstRunComplete=True");
