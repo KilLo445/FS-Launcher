@@ -67,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Firewall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameStore.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -78,6 +82,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Firewall.xaml.cs">
+      <DependentUpon>Firewall.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameStore.xaml.cs">
       <DependentUpon>GameStore.xaml</DependentUpon>
@@ -145,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\BG\BG2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BG\BG3.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

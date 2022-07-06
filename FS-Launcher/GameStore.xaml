@@ -18,6 +18,9 @@
 
         <Button Name="SteamButton" Content="Steam" Click="SteamButton_Click" FontSize="18" Width="60" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,60,80,0"/>
         <Button Name="UbisoftButton" Content="Ubisoft" Click="UbisoftButton_Click" FontSize="18" Width="60" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="80,60,0,0"/>
+        <Button Name="EpicGamesButton" Content="Epic Games" Click="EpicGamesButton_Click" FontSize="18" Width="100" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,160,0,0"/>
+
+        <Button Name="OtherButton" Content="Other" Click="OtherButton_Click" FontSize="18" Width="60" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,260,0,0"/>
 
         <TextBlock Text="More coming soon..." Foreground="White" FontSize="13" FontFamily="/Fonts/Poppins/#Poppins" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10" ToolTip="Support for more stores will be added in future updates." Opacity="0.5"/>
     </Grid>
