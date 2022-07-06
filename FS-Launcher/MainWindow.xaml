@@ -1,0 +1,25 @@
+﻿<Window x:Class="FS_Launcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FS_Launcher"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown"
+        ContentRendered="Window_ContentRendered"
+        Title="Ghost Recon: Future Soldier Launcher" Height="450" Width="800">
+    <Grid>
+        <Image Name="BackgroundImage" Source="Images/BG/BG1.jpg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Margin="0,0,0,0"/>
+        <Image Name="LogoImage" Source="Images/Logo/LogoResized.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" Height="175" Margin="20,20,0,0"/>
+
+        <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,0,8,0" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock Name="MinimizeButton" Text="-" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource MinimizeButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,-1.5,30,0" Grid.Column="1" Grid.RowSpan="2"/>
+
+        <TextBlock Name="VersionText" Text="v0.0.1" Foreground="White" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,0,0,4" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
+    </Grid>
+</Window>
