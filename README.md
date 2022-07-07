@@ -3,12 +3,14 @@ FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's G
   
 Currently only Windows is suported, tested and built for Windows 10  
   
-## Download
-The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/releases/latest)  
-  
+## [Download](https://github.com/KilLo445/FS-Launcher/releases/download/main/fs-launcher-setup.exe)
+The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/releases/latest)
 ## Credit
-[Inno Setup](https://jrsoftware.org/isinfo.php)  
+[Inno Setup](https://github.com/jrsoftware/issrc)  
 [Ookii Dialogs](https://github.com/ookii-dialogs/ookii-dialogs-wpf)
   
-## Other Stuff
-More will be added to the read me later.
+## FAQ  
+Q: How do I change my install location/store?  
+A: Hold Left Shift while opening the launcher.  
+  
+### More will be added to the read me later.
