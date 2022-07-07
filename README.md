@@ -2,6 +2,8 @@
 FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's Ghost Recon: Future Soldier multiplayer working. As it can be annoying, so this program aims at helping out.  
   
 Currently only Windows is suported, tested and built for Windows 10  
+
+![](https://github.com/KilLo445/FS-Launcher/raw/master/A_Files/Images/FS-Launcher_1_70_1.png)
   
 ## Download
 The latest release can be found [here](https://github.com/KilLo445/FS-Launcher/releases/latest)  
