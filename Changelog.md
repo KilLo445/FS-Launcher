@@ -1,4 +1,8 @@
 # Changelog  
+    
+## v0.0.3  
+Added PunkBuster support  
+Small changes/fixes  
   
 ## v0.0.2  
 Added DLC unlocker (DLC Files not included)  
