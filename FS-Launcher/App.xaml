@@ -7,6 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/ButtonTheme1.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonTheme2.xaml"/>
                 <ResourceDictionary Source="Theme/CloseButton.xaml"/>
                 <ResourceDictionary Source="Theme/MinimizeButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>

@@ -23,7 +23,7 @@
         <Button Name="LaunchButton" Content="Play" Click="LaunchButton_Click" FontSize="30" Width="60" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,400,0"/>
 
         <Button Name="FirewallButton" Content="Firewall" Click="FirewallButton_Click" MouseRightButtonDown="FirewallButton_MouseRightButtonDown" FontSize="30" Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,550,0"/>
-        <Button Name="UnlockDLCButton" Content="Unlock DLC" Click="UnlockDLCButton_Click" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,250,0"/>
+        <Button Name="UnlockDLCButton" Content="Unlock DLC" Click="UnlockDLCButton_Click" MouseRightButtonDown="UnlockDLCButton_MouseRightButtonDown" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,250,0"/>
 
         <TextBlock Name="VersionText" Text="" Foreground="White" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,0,0,4" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
         <ProgressBar Name="ProgressBar1" Visibility="Hidden" Width="750" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>

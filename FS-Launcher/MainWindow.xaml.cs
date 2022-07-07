@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Media;
 using System.Net;
 using System.Windows;
@@ -13,7 +14,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "0.0.1";
+        string launcherVersion = "0.0.2";
 
         private string rootPath;
         private string tempPath;
@@ -30,12 +31,24 @@ namespace FS_Launcher
 
         private string gamePath;
         private string storeID;
+        private string firewallSetup;
 
         private string iniPath;
         private string iniStore;
+        private string iniFirewall;
+        private string iniDLC;
+        private string iniDLCPath;
+
+        private string dlcInstalled;
+        private string dlcBin;
+        private string dlcPath;
+        private string dlcTemp;
+        private string dlcSave;
+        private string dlcSaveBak;
+        private string dlcSaveTemp;
+        private string dlcSavePath;
 
         bool updateAvailable;
-        private object webClient;
 
         public MainWindow()
         {
@@ -55,6 +68,13 @@ namespace FS_Launcher
 
             iniPath = Path.Combine(cfgPath, "Path.ini");
             iniStore = Path.Combine(cfgPath, "Store.ini");
+            iniFirewall = Path.Combine(cfgPath, "Firewall.ini");
+            iniDLC = Path.Combine(cfgPath, "DLC.ini");
+            iniDLCPath = Path.Combine(cfgPath, "DLCPath.ini");
+
+            dlcBin = Path.Combine(rootPath, "dlc.bin");
+            dlcTemp = Path.Combine(fsTemp, "DLC");
+            dlcSaveTemp = Path.Combine(fsTemp, "1.save");
 
             VersionText.Text = $"v{launcherVersion}";
 
@@ -63,6 +83,7 @@ namespace FS_Launcher
             GetCFG();
 
             grfsExe = Path.Combine(gamePath, "Future Soldier.exe");
+            dlcPath = Path.Combine(gamePath, "DLC");
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -122,6 +143,20 @@ namespace FS_Launcher
             {
                 storeID = File.ReadAllText(iniStore);
             }
+            if (File.Exists(iniFirewall))
+            {
+                firewallSetup = File.ReadAllText(iniFirewall);
+            }
+            if (File.Exists(iniDLCPath))
+            {
+                dlcSavePath = File.ReadAllText(iniDLCPath);
+                dlcSave = Path.Combine(dlcSavePath, "1.save");
+                dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
+            }
+            if (File.Exists(iniDLC))
+            {
+                dlcInstalled = File.ReadAllText(iniDLC);
+            }
         }
 
         private void DumpVersion()
@@ -175,13 +210,13 @@ namespace FS_Launcher
         {
             try
             {
-                Process.Start(updater);
-                Application.Current.Shutdown();
+                LauncherUpdate updateWindow = new LauncherUpdate();
+                updateWindow.Show();
             }
             catch (Exception ex)
             {
                 SystemSounds.Exclamation.Play();
-                MessageBox.Show($"Error:\n{ex}");
+                MessageBox.Show($"Error: {ex}");
             }
         }
 
@@ -230,21 +265,24 @@ namespace FS_Launcher
             MessageBoxResult firewallMessageBox = System.Windows.MessageBox.Show("Do you want to setup the Firewall Rules in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
             if (firewallMessageBox == MessageBoxResult.Yes)
             {
-                ProgressBar1.Visibility = Visibility.Visible;
-                
-                CreateTemp();
+                if (firewallSetup != "1")
+                {
+                    File.WriteAllText(iniFirewall, "1");
 
-                WebClient webClient = new WebClient();
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback);
-                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/windows.bat"), firewallBat);
+                    ProgressBar1.Visibility = Visibility.Visible;
+
+                    CreateTemp();
+
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback);
+                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/windows.bat"), firewallBat);
+                }
+                else
+                {
+                    MessageBox.Show("The firewall seems to already be setup.");
+                }
             }
-        }
-
-        private void UnlockDLCButton_Click(object sender, RoutedEventArgs e)
-        {
-            SystemSounds.Exclamation.Play();
-            MessageBox.Show("Coming soon", "Unlock DLC");
         }
 
         private void FirewallButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -252,12 +290,21 @@ namespace FS_Launcher
             MessageBoxResult firewallMessageBox2 = System.Windows.MessageBox.Show("Do you want to delete the Firewall Rules in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
             if (firewallMessageBox2 == MessageBoxResult.Yes)
             {
-                CreateTemp();
+                if (firewallSetup != "0")
+                {
+                    File.WriteAllText(iniFirewall, "0");
 
-                WebClient webClient = new WebClient();
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback2);
-                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/delete_windows.bat"), firewallBat);
+                    CreateTemp();
+
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback2);
+                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/delete_windows.bat"), firewallBat);
+                }
+                else
+                {
+                    MessageBox.Show("The firewall rule does not seem to exist.");
+                }
             }
         }
 
@@ -269,6 +316,102 @@ namespace FS_Launcher
         private void DownloadFirewallBatCompletedCallback2(object sender, AsyncCompletedEventArgs e)
         {
             ExecuteAsAdmin(firewallBat);
+        }
+
+        private void UnlockDLCButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (dlcInstalled != "1")
+            {
+                if (File.Exists(dlcBin))
+                {
+                    MessageBoxResult unlockDLC = MessageBox.Show("Are you sure you want to unlock the DLC?", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (unlockDLC == MessageBoxResult.Yes)
+                    {
+                        MessageBox.Show("Please browse to the following location:\n\nC:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savedgames/USER-ID\n\nThere should be a few folders with random numbers.", "Unlock DLC", MessageBoxButton.OK);
+
+                        var saveFileDialog = new VistaFolderBrowserDialog();
+                        saveFileDialog.Description = "Please select your Ubisoft ID folder at C:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savedgames/USER-ID";
+                        saveFileDialog.UseDescriptionForTitle = true;
+                        saveFileDialog.Multiselect = false;
+                        if (saveFileDialog.ShowDialog(this).GetValueOrDefault())
+                        {
+                            dlcSavePath = Path.Combine(saveFileDialog.SelectedPath, "53");
+                            dlcSave = Path.Combine(dlcSavePath, "1.save");
+                            dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
+                            File.WriteAllText(iniDLCPath, dlcSavePath);
+
+                            MessageBox.Show("The launcher may freeze while it unlocks the dlc, do not close it!", "Unlock DLC", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            try
+                            {
+                                ZipFile.ExtractToDirectory(dlcBin, fsTemp);
+
+                                foreach (string dirPath in Directory.GetDirectories(dlcTemp, "*", SearchOption.AllDirectories))
+                                {
+                                    Directory.CreateDirectory(dirPath.Replace(dlcTemp, dlcPath));
+                                }
+
+                                foreach (string newPath in Directory.GetFiles(dlcTemp, "*.*", SearchOption.AllDirectories))
+                                {
+                                    File.Copy(newPath, newPath.Replace(dlcTemp, dlcPath), true);
+                                }
+
+                                File.Copy(dlcSave, dlcSaveBak);
+                                File.Delete(dlcSave);
+                                File.Copy(dlcSaveTemp, dlcSave);
+
+                                File.WriteAllText(iniDLC, "1");
+
+                                SystemSounds.Exclamation.Play();
+                                MessageBox.Show("DLC Unlocked!");
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Error:\n\n{ex}");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show("dlc.bin not found", "Unlock DLC", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                SystemSounds.Exclamation.Play();
+                MessageBox.Show("DLC already seems to be unlocked.");
+            }
+        }
+
+        private void UnlockDLCButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (dlcInstalled != "0")
+            {
+                MessageBoxResult deleteDLC = MessageBox.Show("Are you sure you want to delete the DLC?", "DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (deleteDLC == MessageBoxResult.Yes)
+                {
+                    File.Delete(dlcSave);
+                    File.Copy(dlcSaveBak, dlcSave);
+                    File.Delete(dlcSaveBak);
+
+                    string dlc1;
+                    string dlc2;
+                    string dlc3;
+
+                    dlc1 = Path.Combine(dlcPath, "dlc1");
+                    dlc2 = Path.Combine(dlcPath, "dlc2");
+                    dlc3 = Path.Combine(dlcPath, "dlc3");
+
+                    Directory.Delete(dlc1, true);
+                    Directory.Delete(dlc2, true);
+                    Directory.Delete(dlc3, true);
+
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show("DLC deleted!");
+                }
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
