@@ -15,6 +15,8 @@ namespace FS_Launcher
         {
             InitializeComponent();
 
+            this.Topmost = true;
+
             rootPath = Directory.GetCurrentDirectory();
             updater = Path.Combine(rootPath, "updater.exe");
 

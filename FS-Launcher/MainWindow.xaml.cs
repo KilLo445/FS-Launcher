@@ -14,7 +14,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "0.0.2";
+        string launcherVersion = "0.0.3";
 
         private string rootPath;
         private string tempPath;
@@ -53,6 +53,8 @@ namespace FS_Launcher
         public MainWindow()
         {
             InitializeComponent();
+
+            DelTemp();
 
             rootPath = Directory.GetCurrentDirectory();
             tempPath = Path.GetTempPath();
@@ -327,10 +329,10 @@ namespace FS_Launcher
                     MessageBoxResult unlockDLC = MessageBox.Show("Are you sure you want to unlock the DLC?", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (unlockDLC == MessageBoxResult.Yes)
                     {
-                        MessageBox.Show("Please browse to the following location:\n\nC:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savedgames/USER-ID\n\nThere should be a few folders with random numbers.", "Unlock DLC", MessageBoxButton.OK);
+                        MessageBox.Show("Please browse to the following location:\n\nC:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savegames/USER-ID\n\nThere should be a few folders with random numbers.", "Unlock DLC", MessageBoxButton.OK);
 
                         var saveFileDialog = new VistaFolderBrowserDialog();
-                        saveFileDialog.Description = "Please select your Ubisoft ID folder at C:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savedgames/USER-ID";
+                        saveFileDialog.Description = "Please select your Ubisoft ID folder at C:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savegames/USER-ID";
                         saveFileDialog.UseDescriptionForTitle = true;
                         saveFileDialog.Multiselect = false;
                         if (saveFileDialog.ShowDialog(this).GetValueOrDefault())
@@ -364,6 +366,22 @@ namespace FS_Launcher
 
                                 SystemSounds.Exclamation.Play();
                                 MessageBox.Show("DLC Unlocked!");
+
+                                SystemSounds.Exclamation.Play();
+                                MessageBoxResult deleteDLCbin = MessageBox.Show("Do you want to delete dlc.bin?", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                                if (deleteDLCbin == MessageBoxResult.Yes)
+                                {
+                                    try
+                                    {
+                                        File.Delete(dlcBin);
+
+                                        MessageBox.Show("dlc.bin deleted!");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show($"Error:\n\n{ex}");
+                                    }
+                                }
                             }
                             catch (Exception ex)
                             {
@@ -408,10 +426,18 @@ namespace FS_Launcher
                     Directory.Delete(dlc2, true);
                     Directory.Delete(dlc3, true);
 
+                    File.WriteAllText(iniDLC, "0");
+
                     SystemSounds.Exclamation.Play();
                     MessageBox.Show("DLC deleted!");
                 }
             }
+        }
+
+        private void PunkbusterButton_Click(object sender, RoutedEventArgs e)
+        {
+            Punkbuster pnkbstrWindow = new Punkbuster();
+            pnkbstrWindow.Show();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

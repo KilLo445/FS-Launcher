@@ -17,13 +17,14 @@
         <Image Name="BackgroundImage" Source="Images/BG/BG1.jpg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Margin="0,0,0,0"/>
         <Image Name="LogoImage" Source="Images/Logo/LogoResized.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" Height="175" Margin="20,20,0,0"/>
 
-        <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,0,8,0" Grid.Column="1" Grid.RowSpan="2"/>
-        <TextBlock Name="MinimizeButton" Text="-" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource MinimizeButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,-1.5,30,0" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,0,5,0" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock Name="MinimizeButton" Text="-" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource MinimizeButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,-1.5,25,0" Grid.Column="1" Grid.RowSpan="2"/>
 
         <Button Name="LaunchButton" Content="Play" Click="LaunchButton_Click" FontSize="30" Width="60" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,400,0"/>
 
         <Button Name="FirewallButton" Content="Firewall" Click="FirewallButton_Click" MouseRightButtonDown="FirewallButton_MouseRightButtonDown" FontSize="30" Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,550,0"/>
         <Button Name="UnlockDLCButton" Content="Unlock DLC" Click="UnlockDLCButton_Click" MouseRightButtonDown="UnlockDLCButton_MouseRightButtonDown" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,250,0"/>
+        <Button Name="PunkbusterButton" Content="Punkbuster" Click="PunkbusterButton_Click" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,250,400,0"/>
 
         <TextBlock Name="VersionText" Text="" Foreground="White" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,0,0,4" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
         <ProgressBar Name="ProgressBar1" Visibility="Hidden" Width="750" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
