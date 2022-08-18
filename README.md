@@ -1,7 +1,7 @@
-# Future Soldier Launcher  
-## Notice  
+# Notice  
 Ghost Recon: Future Soldiers servers are currently down, Ubisoft says they are "working on it", so until they are back up, if ever, this launcher is pointless.  
   
+# Future Soldier Launcher  
 FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's Ghost Recon: Future Soldier multiplayer working. As it can be annoying, so this program aims at helping out.  
   
 Currently only Windows is suported, tested and built for Windows 10  
