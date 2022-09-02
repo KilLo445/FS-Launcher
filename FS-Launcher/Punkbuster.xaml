@@ -8,13 +8,14 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
         Background="White"
-        Title="Punkbuster Services" Height="450" Width="800">
+        Title="PunkBuster Services" Height="450" Width="800">
     <Grid>
         <Image Name="PnkBstrLogo" Source="Images/Logo/PnkBstr.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Margin="0,10,0,0" ToolTip="PunkBuster™" MouseLeftButtonDown="PnkBstrLogo_MouseLeftButtonDown"/>
         
-        <Button Name="CheckSys32" Content="Check A + B" Click="CheckSys32_Click" MouseRightButtonDown="CheckSys32_MouseRightButtonDown" Foreground="Black" FontSize="30" FontFamily="/Fonts/Poppins/#Poppins" Width="200" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0"/>
-        <Button Name="TestInstall" Content="Test / Install" Click="TestInstall_Click" Foreground="Black" FontSize="30" FontFamily="/Fonts/Poppins/#Poppins" Width="200" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,140,0,0"/>
+        <Button Name="CheckSys32" Content="Check A + B" Click="CheckSys32_Click" MouseRightButtonDown="CheckSys32_MouseRightButtonDown" Width="200" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0" Style="{StaticResource ButtonTheme2}"/>
+        <Button Name="TestInstall" Content="Test / Install" Click="TestInstall_Click" Width="200" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,140,0,0" Style="{StaticResource ButtonTheme2}"/>
+        <Button Name="GoBack" Content="Go Back" Click="GoBack_Click" Width="200" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,240,0,0" Style="{StaticResource ButtonTheme2}"/>
 
-        <ProgressBar Name="ProgressBar1" Visibility="Hidden" Width="750" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+        <ProgressBar Name="pb" Visibility="Hidden" Width="750" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
     </Grid>
 </Window>

@@ -26,7 +26,7 @@ namespace FS_Launcher
         private void GetVersion()
         {
             WebClient webClient = new WebClient();
-            string updateVer = webClient.DownloadString("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/version.txt");
+            string updateVer = webClient.DownloadString("https://pastebin.com/raw/rg2GbmNL");
 
             UpdateVersion.Text = $"Update: v{updateVer}";
         }

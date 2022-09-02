@@ -10,23 +10,29 @@
         ResizeMode="CanMinimize"
         Background="Transparent"
         AllowsTransparency="True"
-        MouseDown="Window_MouseDown"
         ContentRendered="Window_ContentRendered"
-        Title="Ghost Recon: Future Soldier Launcher" Height="450" Width="800">
+        MouseDown="Window_MouseDown"
+        Title="Future Soldier Launcher" Height="450" Width="340">
     <Grid>
-        <Image Name="BackgroundImage" Source="Images/BG/BG1.jpg" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill" Margin="0,0,0,0"/>
-        <Image Name="LogoImage" Source="Images/Logo/LogoResized.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="350" Height="175" Margin="20,20,0,0"/>
+        <Image Name="BackgroundImage" Source="Images/Background.png" Opacity="0.5"/>
 
-        <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,0,5,0" Grid.Column="1" Grid.RowSpan="2"/>
-        <TextBlock Name="MinimizeButton" Text="-" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource MinimizeButton}" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Top" FontFamily="/Fonts/#Poppins" Height="30" Margin="0,-1.5,25,0" Grid.Column="1" Grid.RowSpan="2"/>
+        <Image Name="LogoFull" Source="Images/Logo/GRFS/GRFS_Logo_Full.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="250" Height="130" Margin="10,35,0,0" Visibility="Hidden"/>
+        
+        <Image Name="LogoTC" Source="Images/Logo/GRFS/TC.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="230" Height="130" Margin="11,35,0,0"/>
+        <Image Name="LogoGRFS" Source="Images/Logo/GRFS/GRFS.png" HorizontalAlignment="Left" VerticalAlignment="Top" Width="230" Height="130" Margin="9,65,0,0"/>
 
-        <Button Name="LaunchButton" Content="Play" Click="LaunchButton_Click" FontSize="30" Width="60" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,400,0"/>
+        <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseMinimizeButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Margin="0,62,5,0" Grid.Column="1" Grid.RowSpan="2"/>
+        <TextBlock Name="MinimizeButton" Text="_" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource CloseMinimizeButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Margin="0,60.15,25,0"/>
 
-        <Button Name="FirewallButton" Content="Firewall" Click="FirewallButton_Click" MouseRightButtonDown="FirewallButton_MouseRightButtonDown" FontSize="30" Width="100" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,550,0"/>
-        <Button Name="UnlockDLCButton" Content="Unlock DLC" Click="UnlockDLCButton_Click" MouseRightButtonDown="UnlockDLCButton_MouseRightButtonDown" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,250,0"/>
-        <Button Name="PunkbusterButton" Content="Punkbuster" Click="PunkbusterButton_Click" FontSize="30" Width="150" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,250,400,0"/>
+        <Button Name="LaunchButton" Content="PLAY" Click="LaunchButton_Click" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,160,0,0"/>
+        <Button Name="FirewallButton" Content="FIREWALL" Click="FirewallButton_Click" MouseRightButtonDown="FirewallButton_MouseRightButtonDown" Width="200" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,200,0,0"/>
+        <Button Name="UnlockDLCButton" Content="UNLOCK DLC" Click="UnlockDLCButton_Click" MouseRightButtonDown="UnlockDLCButton_MouseRightButtonDown" Width="260" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,240,0,0"/>
+        <Button Name="PunkbusterButton" Content="PUNKBUSTER" Click="PunkbusterButton_Click" Width="280" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,280,0,0"/>
+        <Button Name="RPCS3Button" Content="RPCS3" Click="RPCS3Button_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0"/>
 
-        <TextBlock Name="VersionText" Text="" Foreground="White" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="6,0,0,4" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
-        <ProgressBar Name="ProgressBar1" Visibility="Hidden" Width="750" Height="20" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+        <Image Name="GitHubLogo" Source="Images/Logo/GitHub/GitHub_Blue1.png" MouseLeftButtonDown="GitHubLogo_MouseLeftButtonDown" MouseEnter="GitHubLogo_MouseEnter" MouseLeave="GitHubLogo_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="120" Height="60" Margin="5,0,0,38"/>
+
+        <TextBlock Name="VersionText" Text="" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,52" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
+        <ProgressBar Name="pb" Visibility="Hidden" Width="340" Height="15" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
     </Grid>
 </Window>      

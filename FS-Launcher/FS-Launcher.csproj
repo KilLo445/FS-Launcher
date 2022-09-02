@@ -35,21 +35,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Images\GRFS.ico</ApplicationIcon>
+    <ApplicationIcon>GRFS.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ookii.Dialogs.Wpf, Version=5.0.0.0, Culture=neutral, PublicKeyToken=66aa232afad40158, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ookii.Dialogs.Wpf.5.0.1\lib\net462\Ookii.Dialogs.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -71,10 +69,6 @@
     <Compile Include="Punkbuster.xaml.cs">
       <DependentUpon>Punkbuster.xaml</DependentUpon>
     </Compile>
-    <Page Include="GameStore.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="LauncherUpdate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -86,9 +80,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GameStore.xaml.cs">
-      <DependentUpon>GameStore.xaml</DependentUpon>
     </Compile>
     <Compile Include="LauncherUpdate.xaml.cs">
       <DependentUpon>LauncherUpdate.xaml</DependentUpon>
@@ -109,11 +100,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Theme\CloseButton.xaml">
+    <Page Include="Theme\ButtonTheme3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Theme\MinimizeButton.xaml">
+    <Page Include="Theme\CloseMinimizeButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,7 +131,14 @@
     <None Include="app.manifest" />
     <Resource Include="Fonts\Roboto\Roboto-Regular.ttf" />
     <Resource Include="Fonts\Roboto\Roboto-Light.ttf" />
-    <None Include="packages.config" />
+    <None Include="files\firewall\windows\create_firewall_rule_windows.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\firewall\windows\delete_firewall_rule_windows.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Fonts\Eurostile\Eurostile Extended-Regular.ttf" />
+    <Resource Include="Fonts\Eurostile\Eurostile Extended-Bold.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -151,16 +149,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\GRFS.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Logo\Logo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\BG\BG1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Logo\LogoResized.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\BG\BG2.jpg" />
@@ -171,5 +160,37 @@
   <ItemGroup>
     <Resource Include="Images\Logo\PnkBstr.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="files\punkbuster\pbsetup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\punkbuster\pbsvc.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\punkbuster\PnkBstrA.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="files\punkbuster\PnkBstrB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="updater.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="PnkBstr.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GRFS.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Images\Logo\GRFS\GRFS.png" />
+    <Resource Include="Images\Logo\GRFS\GRFS_Logo_Full.png" />
+    <Resource Include="Images\Logo\GRFS\TC.png" />
+    <Resource Include="Images\Background.png" />
+    <None Include="Images\Logo\GitHub\GitHub_Black.png" />
+    <Resource Include="Images\Logo\GitHub\GitHub_Blue1.png" />
+    <Resource Include="Images\Logo\GitHub\GitHub_Blue2.png" />
+    <None Include="Images\Logo\GitHub\GitHub_White.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

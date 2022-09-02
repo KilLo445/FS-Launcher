@@ -8,8 +8,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/ButtonTheme1.xaml"/>
                 <ResourceDictionary Source="Theme/ButtonTheme2.xaml"/>
-                <ResourceDictionary Source="Theme/CloseButton.xaml"/>
-                <ResourceDictionary Source="Theme/MinimizeButton.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonTheme3.xaml"/>
+                <ResourceDictionary Source="Theme/CloseMinimizeButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

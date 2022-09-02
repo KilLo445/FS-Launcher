@@ -5,50 +5,61 @@ using System.IO;
 using System.IO.Compression;
 using System.Media;
 using System.Net;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Input;
-
-using Ookii.Dialogs.Wpf;
+using System.Windows.Media.Imaging;
+using Microsoft.Win32;
+using WinForms = System.Windows.Forms;
 
 namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "0.0.3";
+        string launcherVersion = "1.0.0";
 
+        // Paths
         private string rootPath;
         private string tempPath;
         private string fsTemp;
-        private string cfgPath;
-        private string cfgReset;
-        private string versionFile;
-        private string firstRunFile;
-        private string updater;
-        private string grfsExe;
-        private string firewallBat;
-
-        private string fsLauncher;
 
         private string gamePath;
-        private string storeID;
-        private string firewallSetup;
 
-        private string iniPath;
-        private string iniStore;
-        private string iniFirewall;
-        private string iniDLC;
-        private string iniDLCPath;
-
-        private string dlcInstalled;
-        private string dlcBin;
         private string dlcPath;
         private string dlcTemp;
-        private string dlcSave;
-        private string dlcSaveBak;
-        private string dlcSaveTemp;
         private string dlcSavePath;
 
+        // Files
+        private string fsLauncher;
+        private string versionFile;
+        private string updater;
+
+        private string grfsExe;
+
+        private string firewallBatCreate;
+        private string firewallBatDelete;
+
+        private string dlcBin;
+        private string dlcSave;
+        private string dlcSaveTemp;
+        private string dlcSaveBak;
+
+        // Bools
         bool updateAvailable;
+        bool firstRun;
+        public static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        // Other Stuff
+        string dlc1;
+        string dlc2;
+        string dlc3;
+        string strFirewall;
+        string strDLC;
 
         public MainWindow()
         {
@@ -59,33 +70,33 @@ namespace FS_Launcher
             rootPath = Directory.GetCurrentDirectory();
             tempPath = Path.GetTempPath();
             fsTemp = Path.Combine(tempPath, "FS Launcher");
-            cfgPath = Path.Combine(rootPath, "cfg");
-            cfgReset = Path.Combine(cfgPath, "! Reset.bat");
-            versionFile = Path.Combine(rootPath, "version.txt");
-            firstRunFile = Path.Combine(cfgPath, "FirstRun.ini");
-            updater = Path.Combine(rootPath, "updater.exe");
-            firewallBat = Path.Combine(fsTemp, "firewall.bat");
 
             fsLauncher = Path.Combine(rootPath, "FS-Launcher.exe");
+            versionFile = Path.Combine(rootPath, "version.txt");
+            updater = Path.Combine(rootPath, "updater.exe");
 
-            iniPath = Path.Combine(cfgPath, "Path.ini");
-            iniStore = Path.Combine(cfgPath, "Store.ini");
-            iniFirewall = Path.Combine(cfgPath, "Firewall.ini");
-            iniDLC = Path.Combine(cfgPath, "DLC.ini");
-            iniDLCPath = Path.Combine(cfgPath, "DLCPath.ini");
-
-            dlcBin = Path.Combine(rootPath, "dlc.bin");
+            dlcBin = Path.Combine(fsTemp, "dlc.bin");
             dlcTemp = Path.Combine(fsTemp, "DLC");
             dlcSaveTemp = Path.Combine(fsTemp, "1.save");
 
+            firewallBatCreate = Path.Combine(rootPath, "files", "firewall", "windows", "create_firewall_rule_windows.bat");
+            firewallBatDelete = Path.Combine(rootPath, "files", "firewall", "windows", "delete_firewall_rule_windows.bat");
+
             VersionText.Text = $"v{launcherVersion}";
+
+            CreateReg();
 
             FirstRun();
             CheckShiftKey();
             GetCFG();
+        }
 
-            grfsExe = Path.Combine(gamePath, "Future Soldier.exe");
-            dlcPath = Path.Combine(gamePath, "DLC");
+        private void CreateReg()
+        {
+            RegistryKey key1 = Registry.CurrentUser.OpenSubKey(@"Software", true);
+            key1.CreateSubKey("FS Launcher");
+
+            key1.Close();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -93,85 +104,152 @@ namespace FS_Launcher
             CheckForUpdates();
         }
 
-        private void FirstRun()
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!File.Exists(firstRunFile))
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                MessageBox.Show("Please Note:\n\nThis program is still in development, and I am not amazing at coding, so updates and new features may be slow, but they will be released.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                DragMove();
+            }
+        }
 
-                var firstRunTxt = File.Create(firstRunFile);
-                firstRunTxt.Close();
-                File.WriteAllText(firstRunFile, "FirstRunComplete=True");
-
-                var gamePathDialog = new VistaFolderBrowserDialog();
-                gamePathDialog.Description = "Please select your Ghost Recon: Future Soldier install folder.";
-                gamePathDialog.UseDescriptionForTitle = true;
-                gamePathDialog.Multiselect = false;
-                if (gamePathDialog.ShowDialog(this).GetValueOrDefault())
+        public void CheckShiftKey()
+        {
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obFirstRun = keyFSL.GetValue("FirstRun");
+                if (obFirstRun != null)
                 {
-                    gamePath = Path.Combine(gamePathDialog.SelectedPath);
-                    grfsExe = Path.Combine(gamePath, "Future Soldier.exe");
-
-                    if (!File.Exists(grfsExe))
+                    string strFirstRun = (obFirstRun as String);
+                    if (strFirstRun == "1")
                     {
-                        SystemSounds.Exclamation.Play();
-                        MessageBox.Show("Please select the location with Future Soldier.exe");
-                        File.Delete(firstRunFile);
-                        Application.Current.Shutdown();
+                        MessageBoxResult resetSoftware = MessageBox.Show("Are you sure you want to reset FS Launcher?", "Reset", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (resetSoftware == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                keyFSL.SetValue("FirstRun", "0");
+                                keyFSL.Close();
+
+                                Process.Start(fsLauncher);
+                                Application.Current.Shutdown();
+                            }
+                            catch
+                            {
+                                SystemSounds.Exclamation.Play();
+                                MessageBox.Show("Error resetting FS Launcher.");
+                                Application.Current.Shutdown();
+                            }
+                        }
                     }
-
-                    File.WriteAllText(iniPath, gamePath);
-
-                    GameStore storeWindow = new GameStore();
-                    storeWindow.Show();
-                }
-                else
-                {
-                    SystemSounds.Exclamation.Play();
-                    MessageBox.Show("Please select your Ghost Recon: Future Soldier install folder.");
-                    File.Delete(firstRunFile);
-                    Application.Current.Shutdown();
                 }
             }
         }
 
         private void GetCFG()
         {
-            if (File.Exists(iniPath))
+            using (RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher"))
             {
-                gamePath = File.ReadAllText(iniPath);
-            }
-            if (File.Exists(iniStore))
-            {
-                storeID = File.ReadAllText(iniStore);
-            }
-            if (File.Exists(iniFirewall))
-            {
-                firewallSetup = File.ReadAllText(iniFirewall);
-            }
-            if (File.Exists(iniDLCPath))
-            {
-                dlcSavePath = File.ReadAllText(iniDLCPath);
-                dlcSave = Path.Combine(dlcSavePath, "1.save");
-                dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
-            }
-            if (File.Exists(iniDLC))
-            {
-                dlcInstalled = File.ReadAllText(iniDLC);
+                if (keyFSL != null)
+                {
+                    // Game Path
+                    Object obGRFSPath = keyFSL.GetValue("GRFSPath");
+                    if (obGRFSPath != null)
+                    {
+                        gamePath = (obGRFSPath as String);
+                        grfsExe = Path.Combine(gamePath, "Future Soldier.exe");
+                    }
+
+                    // DLC
+                    Object obDLC = keyFSL.GetValue("DLCSavePath");
+                    if (obDLC != null)
+                    {
+                        strDLC = (obDLC as String);
+
+                        dlcPath = Path.Combine(gamePath, "DLC");
+                        dlcSave = Path.Combine(strDLC, "1.save");
+                        dlcSaveBak = Path.Combine(strDLC, "1.save.bak");
+                    }
+
+                    keyFSL.Close();
+                }
             }
         }
 
         private void DumpVersion()
         {
-            if (File.Exists(versionFile))
+            File.WriteAllText(versionFile, launcherVersion);
+        }
+
+        private void CreateTemp()
+        {
+            Directory.CreateDirectory(fsTemp);
+        }
+
+        private void DelTemp()
+        {
+            if (Directory.Exists(fsTemp))
             {
-                File.WriteAllText(versionFile, launcherVersion);
+                Directory.Delete(fsTemp, true);
             }
-            else
+        }
+
+        private void FirstRun()
+        {
+            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+            Object obFirstRun = keyFSL.GetValue("FirstRun");
+
+            if (obFirstRun == null)
             {
-                File.Create(versionFile);
-                File.WriteAllText(versionFile, launcherVersion);
+                firstRun = true;
             }
+
+            if (obFirstRun != null)
+            {
+                string strFirstRun = (obFirstRun as String);
+                if (strFirstRun == "0")
+                {
+                    firstRun = true;
+                }
+            }
+
+            if (firstRun == true)
+            {
+                MessageBox.Show("Please Note:\n\nThis program is still in development, and I am not amazing at coding, so updates and new features may be slow, but they will be released.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Most buttons have a left and right click function, if you would like to undo something you have previously done, try right clicking the button.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                WinForms.FolderBrowserDialog grfsInstallPathDialog = new WinForms.FolderBrowserDialog();
+                grfsInstallPathDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                grfsInstallPathDialog.Description = "Please select your Ghost Recon: Future Soldier install folder.\n(Location with Future Soldier.exe)";
+                grfsInstallPathDialog.ShowNewFolderButton = false;
+                WinForms.DialogResult grfsResult = grfsInstallPathDialog.ShowDialog();
+
+                if (grfsResult == WinForms.DialogResult.OK)
+                {
+                    gamePath = Path.Combine(grfsInstallPathDialog.SelectedPath);
+                    grfsExe = Path.Combine(gamePath, "Future Soldier.exe");
+
+                    if (!File.Exists(grfsExe))
+                    {
+                        SystemSounds.Exclamation.Play();
+                        MessageBox.Show("Please select the location with Future Soldier.exe");
+                        Application.Current.Shutdown();
+                    }
+                    if (File.Exists(grfsExe))
+                    {
+                        keyFSL.SetValue("GRFSPath", gamePath);
+                        keyFSL.SetValue("FirstRun", "1");
+                        keyFSL.Close();
+                    }
+                }
+                else
+                {
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show("Please select your Ghost Recon: Future Soldier install folder.");
+                    Application.Current.Shutdown();
+                }
+            }
+            keyFSL.Close();
         }
 
         private void CheckForUpdates()
@@ -185,7 +263,7 @@ namespace FS_Launcher
                 try
                 {
                     WebClient webClient = new WebClient();
-                    Version onlineVersion = new Version(webClient.DownloadString("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/version.txt"));
+                    Version onlineVersion = new Version(webClient.DownloadString("https://pastebin.com/raw/rg2GbmNL"));
 
                     if (onlineVersion.IsDifferentThan(localVersion))
                     {
@@ -222,248 +300,290 @@ namespace FS_Launcher
             }
         }
 
-        public void CheckShiftKey()
+        private void CloseButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift) && File.Exists(firstRunFile))
-            {
-                MessageBoxResult resetSoftware = MessageBox.Show("Are you sure you want to reset FS Launcher?", "Reset", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (resetSoftware == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        File.Delete(firstRunFile);
+            Application.Current.Shutdown();
+        }
 
-                        Process.Start(fsLauncher);
-                        Application.Current.Shutdown();
-                    }
-                    catch
-                    {
-                        SystemSounds.Exclamation.Play();
-                        MessageBox.Show("Error resetting FS Launcher, please run reset.bat in the cfg folder.");
-                        Application.Current.Shutdown();
-                    }
-                }
-            }
+        private void MinimizeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
-            if (storeID == "0")
+            try
             {
                 Process.Start(grfsExe);
+                Application.Current.Shutdown();
             }
-            if (storeID == "1")
+            catch (Exception ex)
             {
-                Process.Start("steam://run/212630");
-            }
-            if (storeID == "2")
-            {
-                Process.Start("uplay://launch/53/0");
+                MessageBox.Show($"Error launching Ghost Recon: Future Soldier:\n\n{ex}");
             }
         }
 
         private void FirewallButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult firewallMessageBox = System.Windows.MessageBox.Show("Do you want to setup the Firewall Rules in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
-            if (firewallMessageBox == MessageBoxResult.Yes)
+            MessageBoxResult firewallMessageBox1 = System.Windows.MessageBox.Show("Are you sure you want to setup the Firewall Rule in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
+            if (firewallMessageBox1 == MessageBoxResult.Yes)
             {
-                if (firewallSetup != "1")
+                strFirewall = "0";
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obFirewall = keyFSL.GetValue("Firewall");
+
+                if (obFirewall == null)
                 {
-                    File.WriteAllText(iniFirewall, "1");
+                    strFirewall = "0";
+                }
 
-                    ProgressBar1.Visibility = Visibility.Visible;
+                if (obFirewall != null)
+                {
+                    strFirewall = (obFirewall as String);
+                }
 
-                    CreateTemp();
-
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback);
-                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                    webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/windows.bat"), firewallBat);
+                if (strFirewall != "1")
+                {
+                    keyFSL.SetValue("Firewall", "1");
+                    keyFSL.Close();
+                    ExecuteAsAdmin(firewallBatCreate);
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show("Firewall Rule successfully created!", "Firewall");
                 }
                 else
                 {
-                    MessageBox.Show("The firewall seems to already be setup.");
+                    keyFSL.Close();
+                    MessageBox.Show("The firewall rule seems to already exist. Try deleting it first.");
+                    return;
                 }
             }
         }
 
         private void FirewallButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBoxResult firewallMessageBox2 = System.Windows.MessageBox.Show("Do you want to delete the Firewall Rules in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
+            MessageBoxResult firewallMessageBox2 = System.Windows.MessageBox.Show("Are you sure you want to delete the Firewall Rule in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
             if (firewallMessageBox2 == MessageBoxResult.Yes)
             {
-                if (firewallSetup != "0")
+                strFirewall = "0";
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obFirewall = keyFSL.GetValue("Firewall");
+
+                if (obFirewall == null)
                 {
-                    File.WriteAllText(iniFirewall, "0");
+                    strFirewall = "0";
+                }
 
-                    CreateTemp();
+                if (obFirewall != null)
+                {
+                    strFirewall = (obFirewall as String);
+                }
 
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadFirewallBatCompletedCallback2);
-                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                    webClient.DownloadFileAsync(new Uri("https://raw.githubusercontent.com/KilLo445/FS-Launcher/master/A_Files/firewall/delete_windows.bat"), firewallBat);
+                if (strFirewall != "0")
+                {
+                    keyFSL.SetValue("Firewall", "0");
+                    keyFSL.Close();
+                    ExecuteAsAdmin(firewallBatDelete);
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show("Firewall Rule successfully deleted!", "Firewall");
                 }
                 else
                 {
-                    MessageBox.Show("The firewall rule does not seem to exist.");
+                    keyFSL.Close();
+                    MessageBox.Show("The firewall rule does not seem to exist. Try creating it first.");
+                    return;
                 }
             }
-        }
-
-        private void DownloadFirewallBatCompletedCallback(object sender, AsyncCompletedEventArgs e)
-        {
-            ProgressBar1.Visibility = Visibility.Hidden;
-            ExecuteAsAdmin(firewallBat);
-        }
-        private void DownloadFirewallBatCompletedCallback2(object sender, AsyncCompletedEventArgs e)
-        {
-            ExecuteAsAdmin(firewallBat);
         }
 
         private void UnlockDLCButton_Click(object sender, RoutedEventArgs e)
         {
-            if (dlcInstalled != "1")
+            MessageBoxResult unlockDLC = MessageBox.Show("Are you sure you want to download and unlock the DLC?\n\nDownload Size: 1.76 GB\nExtracted Size: 2.43 GB", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (unlockDLC == MessageBoxResult.Yes)
             {
-                if (File.Exists(dlcBin))
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obDLC = keyFSL.GetValue("DLC");
+
+                if (obDLC == null)
                 {
-                    MessageBoxResult unlockDLC = MessageBox.Show("Are you sure you want to unlock the DLC?", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (unlockDLC == MessageBoxResult.Yes)
-                    {
-                        MessageBox.Show("Please browse to the following location:\n\nC:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savegames/USER-ID\n\nThere should be a few folders with random numbers.", "Unlock DLC", MessageBoxButton.OK);
-
-                        var saveFileDialog = new VistaFolderBrowserDialog();
-                        saveFileDialog.Description = "Please select your Ubisoft ID folder at C:/Program Files(x86)/Ubisoft/Ubisoft Game Launcher/savegames/USER-ID";
-                        saveFileDialog.UseDescriptionForTitle = true;
-                        saveFileDialog.Multiselect = false;
-                        if (saveFileDialog.ShowDialog(this).GetValueOrDefault())
-                        {
-                            dlcSavePath = Path.Combine(saveFileDialog.SelectedPath, "53");
-                            dlcSave = Path.Combine(dlcSavePath, "1.save");
-                            dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
-                            File.WriteAllText(iniDLCPath, dlcSavePath);
-
-                            MessageBox.Show("The launcher may freeze while it unlocks the dlc, do not close it!", "Unlock DLC", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                            try
-                            {
-                                ZipFile.ExtractToDirectory(dlcBin, fsTemp);
-
-                                foreach (string dirPath in Directory.GetDirectories(dlcTemp, "*", SearchOption.AllDirectories))
-                                {
-                                    Directory.CreateDirectory(dirPath.Replace(dlcTemp, dlcPath));
-                                }
-
-                                foreach (string newPath in Directory.GetFiles(dlcTemp, "*.*", SearchOption.AllDirectories))
-                                {
-                                    File.Copy(newPath, newPath.Replace(dlcTemp, dlcPath), true);
-                                }
-
-                                File.Copy(dlcSave, dlcSaveBak);
-                                File.Delete(dlcSave);
-                                File.Copy(dlcSaveTemp, dlcSave);
-
-                                File.WriteAllText(iniDLC, "1");
-
-                                SystemSounds.Exclamation.Play();
-                                MessageBox.Show("DLC Unlocked!");
-
-                                SystemSounds.Exclamation.Play();
-                                MessageBoxResult deleteDLCbin = MessageBox.Show("Do you want to delete dlc.bin?", "Unlock DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                                if (deleteDLCbin == MessageBoxResult.Yes)
-                                {
-                                    try
-                                    {
-                                        File.Delete(dlcBin);
-
-                                        MessageBox.Show("dlc.bin deleted!");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        MessageBox.Show($"Error:\n\n{ex}");
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Error:\n\n{ex}");
-                            }
-                        }
-                    }
+                    strDLC = "0";
                 }
-                else
+
+                if (obDLC != null)
                 {
+                    strDLC = (obDLC as String);
+                }
+
+                if (strDLC == "1")
+                {
+                    MessageBox.Show("DLC seems to already be unlocked.", "DLC Unlocker");
+                    return;
+                }
+
+                MessageBox.Show("Please select the following folder:\nC:\\Program Files(x86)\\Ubisoft\\Ubisoft Game Launcher\\savegames\\USER-ID\n\nIt should be a folder named with random characters.", "DLC Unlocker");
+
+                WinForms.FolderBrowserDialog ubisoftIDDialog = new WinForms.FolderBrowserDialog();
+                ubisoftIDDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
+                ubisoftIDDialog.Description = "Please select the following folder:\nC:\\Program Files(x86)\\Ubisoft\\Ubisoft Game Launcher\\savegames\\USER-ID\n\nIt should be a folder named with random characters.";
+                ubisoftIDDialog.ShowNewFolderButton = false;
+                WinForms.DialogResult ubiIDResult = ubisoftIDDialog.ShowDialog();
+
+                if (ubiIDResult == WinForms.DialogResult.OK)
+                {
+                    dlcPath = Path.Combine(gamePath, "DLC");
+                    dlcSavePath = Path.Combine(ubisoftIDDialog.SelectedPath, "53");
+                    dlcSave = Path.Combine(dlcSavePath, "1.save");
+                    dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
+                    keyFSL.SetValue("DLCSavePath", $"{dlcSavePath}");
+                    keyFSL.Close();
+
                     SystemSounds.Exclamation.Play();
-                    MessageBox.Show("dlc.bin not found", "Unlock DLC", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("The download will now start, please do not close FS Launcher until it finishes.", "DLC Unlocker");
+
+                    CloseButton.IsEnabled = false;
+                    LaunchButton.IsEnabled = false;
+                    FirewallButton.IsEnabled = false;
+                    UnlockDLCButton.IsEnabled = false;
+                    PunkbusterButton.IsEnabled = false;
+                    RPCS3Button.IsEnabled = false;
+                    pb.Visibility = Visibility.Visible;
+
+                    CreateTemp();
+                    Directory.CreateDirectory(dlcPath);
+
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DLCDownloadCompletedCallback);
+                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    webClient.DownloadFileAsync(new Uri("https://www.dropbox.com/s/rdmjk53ozbm8agn/dlc.bin?dl=1"), dlcBin);
                 }
             }
-            else
+        }
+
+        private void DLCDownloadCompletedCallback(object sender, AsyncCompletedEventArgs e)
+        {
+            try
             {
+                ZipFile.ExtractToDirectory(dlcBin, fsTemp);
+                File.Delete(dlcBin);
+
+                foreach (string dirPath in Directory.GetDirectories(dlcTemp, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(dlcTemp, dlcPath));
+                }
+
+                foreach (string newPath in Directory.GetFiles(dlcTemp, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(dlcTemp, dlcPath), true);
+                }
+
+                Directory.Delete(dlcTemp, true);
+
+                File.Copy(dlcSave, dlcSaveBak);
+                File.Delete(dlcSave);
+                File.Copy(dlcSaveTemp, dlcSave);
+
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                keyFSL.SetValue("DLC", "1");
+                keyFSL.Close();
+
+                CloseButton.IsEnabled = true;
+                LaunchButton.IsEnabled = true;
+                FirewallButton.IsEnabled = true;
+                UnlockDLCButton.IsEnabled = true;
+                PunkbusterButton.IsEnabled = true;
+                RPCS3Button.IsEnabled = true;
+                pb.Visibility = Visibility.Hidden;
+
                 SystemSounds.Exclamation.Play();
-                MessageBox.Show("DLC already seems to be unlocked.");
+                MessageBox.Show("DLC Unlocked!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error:\n\n{ex}");
             }
         }
 
         private void UnlockDLCButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (dlcInstalled != "0")
+            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+            Object obDLC = keyFSL.GetValue("DLC");
+
+            if (obDLC == null)
             {
-                MessageBoxResult deleteDLC = MessageBox.Show("Are you sure you want to delete the DLC?", "DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (deleteDLC == MessageBoxResult.Yes)
-                {
-                    File.Delete(dlcSave);
-                    File.Copy(dlcSaveBak, dlcSave);
-                    File.Delete(dlcSaveBak);
+                strDLC = "0";
+            }
 
-                    string dlc1;
-                    string dlc2;
-                    string dlc3;
+            if (obDLC != null)
+            {
+                strDLC = (obDLC as String);
+            }
 
-                    dlc1 = Path.Combine(dlcPath, "dlc1");
-                    dlc2 = Path.Combine(dlcPath, "dlc2");
-                    dlc3 = Path.Combine(dlcPath, "dlc3");
+            if (strDLC != "1")
+            {
+                return;
+            }
 
-                    Directory.Delete(dlc1, true);
-                    Directory.Delete(dlc2, true);
-                    Directory.Delete(dlc3, true);
+            MessageBoxResult deleteDLC = MessageBox.Show("Are you sure you want to delete the DLC?", "DLC", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (deleteDLC == MessageBoxResult.Yes)
+            {
+                File.Delete(dlcSave);
+                File.Copy(dlcSaveBak, dlcSave);
+                File.Delete(dlcSaveBak);
 
-                    File.WriteAllText(iniDLC, "0");
+                dlc1 = Path.Combine(dlcPath, "dlc1");
+                dlc2 = Path.Combine(dlcPath, "dlc2");
+                dlc3 = Path.Combine(dlcPath, "dlc3");
 
-                    SystemSounds.Exclamation.Play();
-                    MessageBox.Show("DLC deleted!");
-                }
+                Directory.Delete(dlc1, true);
+                Directory.Delete(dlc2, true);
+                Directory.Delete(dlc3, true);
+
+                keyFSL.SetValue("DLC", "0");
+                keyFSL.Close();
+
+                SystemSounds.Exclamation.Play();
+                MessageBox.Show("DLC deleted!");
             }
         }
 
         private void PunkbusterButton_Click(object sender, RoutedEventArgs e)
         {
-            Punkbuster pnkbstrWindow = new Punkbuster();
-            pnkbstrWindow.Show();
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (IsAdministrator())
             {
-                DragMove();
+                Punkbuster pnkbstrWindow = new Punkbuster();
+                this.Close();
+                pnkbstrWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("Please run FS Launcher as Admin before running Punkbuster.", "Punkster", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
         }
 
-        private void CreateTemp()
+        private void RPCS3Button_Click(object sender, RoutedEventArgs e)
         {
-            Directory.CreateDirectory(fsTemp);
-        }
-
-        private void DelTemp()
-        {
-            if (Directory.Exists(fsTemp))
-            {
-                Directory.Delete(fsTemp, true);
-            }
+            SystemSounds.Exclamation.Play();
+            MessageBox.Show("Coming Soon...", "RPCS3");
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            ProgressBar1.Value = e.ProgressPercentage;
+            pb.Value = e.ProgressPercentage;
+        }
+
+        private void GitHubLogo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("https://github.com/KilLo445/FS-Launcher");
+        }
+
+        private void GitHubLogo_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue2.png"));
+        }
+
+        private void GitHubLogo_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue1.png"));
         }
 
         private void VersionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -480,28 +600,26 @@ namespace FS_Launcher
             }
         }
 
-        private void CloseButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
-
-        private void MinimizeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             DelTemp();
         }
 
-        public void ExecuteAsAdmin(string fileName)
+        public void ExecuteAsAdmin(string adminFileName)
         {
-            Process proc = new Process();
-            proc.StartInfo.FileName = fileName;
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.Verb = "runas";
-            proc.Start();
+            try
+            {
+                Process proc = new Process();
+                proc.StartInfo.FileName = adminFileName;
+                proc.StartInfo.UseShellExecute = true;
+                proc.StartInfo.Verb = "runas";
+                proc.Start();
+            }
+            catch
+            {
+                MessageBox.Show($"Error launching as admin.\nPlease accept admin prompt.\n\nFile: {adminFileName}", "Error");
+                return;
+            }
         }
 
         struct Version
