@@ -19,6 +19,9 @@ Helps install and setup RPCS3 for Future Soldier Lan Play.
 ### Right Click  
 Most buttons have a right click function as well, right click usually works as an undo button to delete the firewall rule, delete dlc, etc.  
   
+### Resetting The Launcher
+If you would like to reset the launcher, hold left shift while opening the launcher.  
+  
 ## Changelog
 Changelog can be found [here](https://github.com/KilLo445/FS-Launcher/blob/master/Changelog.md)  
   
