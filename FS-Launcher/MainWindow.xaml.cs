@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.0.0";
+        string launcherVersion = "1.0.1";
 
         // Paths
         private string rootPath;
@@ -47,6 +47,7 @@ namespace FS_Launcher
         // Bools
         bool updateAvailable;
         bool firstRun;
+        bool firstRunMessages = true;
         public static bool IsAdministrator()
         {
             var identity = WindowsIdentity.GetCurrent();
@@ -91,14 +92,6 @@ namespace FS_Launcher
             GetCFG();
         }
 
-        private void CreateReg()
-        {
-            RegistryKey key1 = Registry.CurrentUser.OpenSubKey(@"Software", true);
-            key1.CreateSubKey("FS Launcher");
-
-            key1.Close();
-        }
-
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             CheckForUpdates();
@@ -112,38 +105,36 @@ namespace FS_Launcher
             }
         }
 
-        public void CheckShiftKey()
+        private void DumpVersion()
         {
-            if (Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
-                Object obFirstRun = keyFSL.GetValue("FirstRun");
-                if (obFirstRun != null)
-                {
-                    string strFirstRun = (obFirstRun as String);
-                    if (strFirstRun == "1")
-                    {
-                        MessageBoxResult resetSoftware = MessageBox.Show("Are you sure you want to reset FS Launcher?", "Reset", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                        if (resetSoftware == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                keyFSL.SetValue("FirstRun", "0");
-                                keyFSL.Close();
+            File.WriteAllText(versionFile, launcherVersion);
+        }
 
-                                Process.Start(fsLauncher);
-                                Application.Current.Shutdown();
-                            }
-                            catch
-                            {
-                                SystemSounds.Exclamation.Play();
-                                MessageBox.Show("Error resetting FS Launcher.");
-                                Application.Current.Shutdown();
-                            }
-                        }
-                    }
-                }
+        private void CreateTemp()
+        {
+            Directory.CreateDirectory(fsTemp);
+        }
+
+        private void DelTemp()
+        {
+            if (Directory.Exists(fsTemp))
+            {
+                Directory.Delete(fsTemp, true);
             }
+        }
+
+        private void RestartFSL()
+        {
+            Process.Start(fsLauncher);
+            Application.Current.Shutdown();
+        }
+
+        private void CreateReg()
+        {
+            RegistryKey key1 = Registry.CurrentUser.OpenSubKey(@"Software", true);
+            key1.CreateSubKey("FS Launcher");
+
+            key1.Close();
         }
 
         private void GetCFG()
@@ -176,21 +167,36 @@ namespace FS_Launcher
             }
         }
 
-        private void DumpVersion()
+        public void CheckShiftKey()
         {
-            File.WriteAllText(versionFile, launcherVersion);
-        }
-
-        private void CreateTemp()
-        {
-            Directory.CreateDirectory(fsTemp);
-        }
-
-        private void DelTemp()
-        {
-            if (Directory.Exists(fsTemp))
+            if (Keyboard.IsKeyDown(Key.LeftShift))
             {
-                Directory.Delete(fsTemp, true);
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obFirstRun = keyFSL.GetValue("FirstRun");
+                if (obFirstRun != null)
+                {
+                    string strFirstRun = (obFirstRun as String);
+                    if (strFirstRun == "1")
+                    {
+                        MessageBoxResult resetSoftware = MessageBox.Show("Are you sure you want to reset FS Launcher?", "Reset", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (resetSoftware == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                keyFSL.SetValue("FirstRun", "0");
+                                keyFSL.Close();
+
+                                RestartFSL();
+                            }
+                            catch
+                            {
+                                SystemSounds.Exclamation.Play();
+                                MessageBox.Show("Error resetting FS Launcher.");
+                                RestartFSL();
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -215,8 +221,12 @@ namespace FS_Launcher
 
             if (firstRun == true)
             {
-                MessageBox.Show("Please Note:\n\nThis program is still in development, and I am not amazing at coding, so updates and new features may be slow, but they will be released.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
-                MessageBox.Show("Most buttons have a left and right click function, if you would like to undo something you have previously done, try right clicking the button.", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (firstRunMessages == true)
+                {
+                    MessageBox.Show("Welcome to FS Launcher!", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Most buttons have a left and right click function, if you would like to undo something you have previously done, try right clicking the button!", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
+                }
 
                 WinForms.FolderBrowserDialog grfsInstallPathDialog = new WinForms.FolderBrowserDialog();
                 grfsInstallPathDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -233,10 +243,13 @@ namespace FS_Launcher
                     {
                         SystemSounds.Exclamation.Play();
                         MessageBox.Show("Please select the location with Future Soldier.exe");
-                        Application.Current.Shutdown();
+                        firstRunMessages = false;
+                        FirstRun();
                     }
                     if (File.Exists(grfsExe))
                     {
+                        MessageBox.Show("You can change your install location at any time by holding shift on startup!", "Future Soldier Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+
                         keyFSL.SetValue("GRFSPath", gamePath);
                         keyFSL.SetValue("FirstRun", "1");
                         keyFSL.Close();
@@ -244,8 +257,6 @@ namespace FS_Launcher
                 }
                 else
                 {
-                    SystemSounds.Exclamation.Play();
-                    MessageBox.Show("Please select your Ghost Recon: Future Soldier install folder.");
                     Application.Current.Shutdown();
                 }
             }
@@ -555,7 +566,7 @@ namespace FS_Launcher
             }
             else
             {
-                MessageBox.Show("Please run FS Launcher as Admin before running Punkbuster.", "Punkster", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please run FS Launcher as Admin before running Punkbuster.", "Punkbuster", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
         }
