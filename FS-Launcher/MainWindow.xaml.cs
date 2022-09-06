@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.0.1";
+        string launcherVersion = "1.1.0";
 
         // Paths
         private string rootPath;
@@ -573,8 +573,9 @@ namespace FS_Launcher
 
         private void RPCS3Button_Click(object sender, RoutedEventArgs e)
         {
-            SystemSounds.Exclamation.Play();
-            MessageBox.Show("Coming Soon...", "RPCS3");
+            RPCS3 rpcs3Window = new RPCS3();
+            this.Close();
+            rpcs3Window.Show();
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)

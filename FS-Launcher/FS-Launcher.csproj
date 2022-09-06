@@ -69,6 +69,9 @@
     <Compile Include="Punkbuster.xaml.cs">
       <DependentUpon>Punkbuster.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RPCS3.xaml.cs">
+      <DependentUpon>RPCS3.xaml</DependentUpon>
+    </Compile>
     <Page Include="LauncherUpdate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -92,6 +95,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="RPCS3.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Theme\ButtonTheme1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,9 +107,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Theme\ButtonTheme4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Theme\ButtonTheme3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\CloseMinimizeButton2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Theme\CloseMinimizeButton.xaml">
       <SubType>Designer</SubType>
@@ -152,12 +167,6 @@
     <Resource Include="Images\BG\BG1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\BG\BG2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\BG\BG3.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\Logo\PnkBstr.png" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +182,14 @@
     <Content Include="files\punkbuster\PnkBstrB.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\ds3_controller.png" />
+    <Resource Include="Images\BG\RPCS3\RPCS3_1.png" />
+    <Resource Include="Images\Logo\RPCS3\Full\Color\1024.png" />
+    <Resource Include="Images\Logo\RPCS3\Full\Color\2048.png" />
+    <Resource Include="Images\Logo\RPCS3\Full\Color\4096.png" />
+    <None Include="RPCS3.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="updater.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -191,6 +208,16 @@
     <Resource Include="Images\Logo\GitHub\GitHub_Blue2.png" />
     <None Include="Images\Logo\GitHub\GitHub_White.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

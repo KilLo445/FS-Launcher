@@ -9,7 +9,9 @@
                 <ResourceDictionary Source="Theme/ButtonTheme1.xaml"/>
                 <ResourceDictionary Source="Theme/ButtonTheme2.xaml"/>
                 <ResourceDictionary Source="Theme/ButtonTheme3.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonTheme4.xaml"/>
                 <ResourceDictionary Source="Theme/CloseMinimizeButton.xaml"/>
+                <ResourceDictionary Source="Theme/CloseMinimizeButton2.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
