@@ -285,7 +285,7 @@ namespace FS_Launcher
                             MessageBox.Show("Uninstall complete!", "RPCS3", MessageBoxButton.OK, MessageBoxImage.Information);
 
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             MessageBox.Show($"", "", MessageBoxButton.OK, MessageBoxImage.Error);
                         }

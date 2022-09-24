@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.0";
+        string launcherVersion = "1.1.1";
 
         // Paths
         private string rootPath;
@@ -108,6 +108,10 @@ namespace FS_Launcher
         private void DumpVersion()
         {
             File.WriteAllText(versionFile, launcherVersion);
+
+            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+            keyFSL.SetValue("Version", $"{launcherVersion}");
+            keyFSL.Close();
         }
 
         private void CreateTemp()
@@ -430,7 +434,21 @@ namespace FS_Launcher
                     return;
                 }
 
-                MessageBox.Show("Please select the following folder:\nC:\\Program Files(x86)\\Ubisoft\\Ubisoft Game Launcher\\savegames\\USER-ID\n\nIt should be a folder named with random characters.", "DLC Unlocker");
+                string ubiInstallDir = "C:\\Program Files(x86)\\Ubisoft\\Ubisoft Game Launcher\\";
+
+                using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey("Software\\Wow6432Node\\Ubisoft\\Launcher"))
+                {
+                    if (regKey != null)
+                    {
+                        Object obUbiPath = regKey.GetValue("InstallDir");
+                        if (obUbiPath != null)
+                        {
+                            ubiInstallDir = (obUbiPath as String);
+                        }
+                    }
+                }
+
+                MessageBox.Show($"Please select the following folder:\n{ubiInstallDir}savegames\\USER-ID\n\nIt should be a folder named with random characters.", "DLC Unlocker");
 
                 WinForms.FolderBrowserDialog ubisoftIDDialog = new WinForms.FolderBrowserDialog();
                 ubisoftIDDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -440,8 +458,22 @@ namespace FS_Launcher
 
                 if (ubiIDResult == WinForms.DialogResult.OK)
                 {
+                    dlcSavePath = Path.Combine(ubisoftIDDialog.SelectedPath);
+                    DirectoryInfo dir_info = new DirectoryInfo(dlcSavePath);
+                    string directory = dir_info.Name;
+
+                    if (directory != "53")
+                    {
+                        dlcSavePath = Path.Combine(ubisoftIDDialog.SelectedPath, "53");
+
+                        if (!Directory.Exists(dlcSavePath))
+                        {
+                            MessageBox.Show("Please select the correct folder.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+
                     dlcPath = Path.Combine(gamePath, "DLC");
-                    dlcSavePath = Path.Combine(ubisoftIDDialog.SelectedPath, "53");
                     dlcSave = Path.Combine(dlcSavePath, "1.save");
                     dlcSaveBak = Path.Combine(dlcSavePath, "1.save.bak");
                     keyFSL.SetValue("DLCSavePath", $"{dlcSavePath}");
