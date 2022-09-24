@@ -13,7 +13,7 @@ Creates required firewall rule to block broken IPs that Future Soldier connects 
 Downloads and unlocks most DLC for the game.
 ### Punkbuster   
 Checks to make sure your punkbuster is installed correctly, it can help install it if it isn't.  
-### RPCS3 (Coming soon)   
+### RPCS3   
 Helps install and setup RPCS3 for Future Soldier Lan Play.  
   
 ### Right Click  
