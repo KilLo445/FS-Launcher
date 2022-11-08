@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.2";
+        string launcherVersion = "1.1.3";
 
         // Paths
         private string rootPath;
@@ -28,6 +28,8 @@ namespace FS_Launcher
         private string dlcPath;
         private string dlcTemp;
         private string dlcSavePath;
+
+        private string steamPath;
 
         // Files
         private string fsLauncher;
@@ -48,6 +50,8 @@ namespace FS_Launcher
         bool updateAvailable;
         bool firstRun;
         bool firstRunMessages = true;
+        bool resetFirewall;
+        bool steamInstalled;
         public static bool IsAdministrator()
         {
             var identity = WindowsIdentity.GetCurrent();
@@ -194,19 +198,68 @@ namespace FS_Launcher
                         {
                             try
                             {
-                                keyFSL.SetValue("FirstRun", "0");
-                                keyFSL.Close();
-
-                                RestartFSL();
+                                ResetFSL();
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show($"Error Resetting Launcher: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                RestartFSL();
+                                MessageBox.Show($"{ex}", "Error Resetting Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private void ResetFSL()
+        {
+            try
+            {
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                Object obFirstRun = keyFSL.GetValue("FirstRun");
+                Object obFirewall = keyFSL.GetValue("Firewall");
+                if (obFirstRun != null)
+                {
+                    string strFirstRun = (obFirstRun as String);
+                    if (strFirstRun == "1")
+                    {
+                        keyFSL.SetValue("FirstRun", "0");
+                    }
+                }
+                if (obFirewall != null)
+                {
+                    string strFirewall = (obFirewall as String);
+                    if (strFirewall == "1")
+                    {
+                        resetFirewall = false;
+                        while (resetFirewall == false)
+                        {
+                            try
+                            {
+                                Process proc = new Process();
+                                proc.StartInfo.FileName = firewallBatDelete;
+                                proc.StartInfo.UseShellExecute = true;
+                                proc.StartInfo.Verb = "runas";
+                                proc.Start();
+                                resetFirewall = true;
+                            }
+                            catch
+                            {
+                                resetFirewall = false;
+                                MessageBox.Show("Please accept the admin prompt.");
+                            }
+                        }
+
+                        keyFSL.SetValue("Firewall", "0");
+                        keyFSL.DeleteValue("GRFSPath");
+                        keyFSL.Close();
+                    }
+                }
+
+                RestartFSL();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex}", "Error Resetting Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -307,6 +360,7 @@ namespace FS_Launcher
                 InstallUpdate(false, Version.zero);
             }
         }
+
         private void InstallUpdate(bool isUpdate, Version _onlineVersion)
         {
             try
@@ -332,6 +386,60 @@ namespace FS_Launcher
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
+            using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey("Software\\Wow6432Node\\Valve\\Steam"))
+            {
+                if (regKey != null)
+                {
+                    Object obSteamPath = regKey.GetValue("InstallPath");
+                    if (obSteamPath != null)
+                    {
+                        steamPath = (obSteamPath as String);
+                        steamInstalled = true;
+                    }
+                    else
+                    {
+                        steamInstalled = false;
+                    }
+                }
+            }
+
+            if (steamInstalled == true)
+            {
+                string libraryFolders = Path.Combine(steamPath, "config", "libraryfolders.vdf");
+                string libraryFoldersTxt = Path.Combine(fsTemp, "libraryfolders.txt");
+
+                CreateTemp();
+                File.Delete(libraryFoldersTxt);
+                File.Copy(libraryFolders, libraryFoldersTxt);
+
+                string libraryFoldersContent = File.ReadAllText(libraryFoldersTxt);
+
+                if (libraryFoldersContent.Contains("212630"))
+                {
+                    try
+                    {
+                        Process.Start("steam://rungameid/212630");
+                        File.Delete(libraryFoldersTxt);
+                        Application.Current.Shutdown();
+                    }
+                    catch
+                    {
+                        LaunchGRFSExe();
+                    }
+                }
+                else
+                {
+                    LaunchGRFSExe();
+                }
+            }
+            else
+            {
+                LaunchGRFSExe();
+            }
+        }
+
+        private void LaunchGRFSExe()
+        {
             try
             {
                 Process.Start(grfsExe);
@@ -339,7 +447,7 @@ namespace FS_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error launching Ghost Recon: Future Soldier: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"{ex}", "Error launching Ghost Recon: Future Soldier", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

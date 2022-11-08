@@ -279,6 +279,7 @@ namespace FS_Launcher
 
                             RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
                             keyFSL.SetValue("RPCS3", "0");
+                            keyFSL.DeleteValue("RPCS3Path");
                             keyFSL.Close();
 
                             MainButton.Content = "Download";
