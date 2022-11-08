@@ -384,16 +384,19 @@ namespace FS_Launcher
                 MainButton.IsEnabled = false;
                 CloseButton.IsEnabled = false;
 
-                MessageBox.Show("Please select where you would like to save the PS3 System Software.\n\nSelect somewhere you will remember, you will need it later.", "PS3 System Software", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please select where you would like to save the PS3 System Software.\n\nSelect somewhere you will remember, you will need it later.\n\nDo not rename the file, it may cause issues.", "PS3 System Software", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                WinForms.FolderBrowserDialog ps3SoftwarePathDialog = new WinForms.FolderBrowserDialog();
-                ps3SoftwarePathDialog.SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory;
-                ps3SoftwarePathDialog.Description = "Please select where you would like to save the PS3 System Software.";
-                ps3SoftwarePathDialog.ShowNewFolderButton = true;
-                WinForms.DialogResult ps3SoftwareResult = ps3SoftwarePathDialog.ShowDialog();
-                if (ps3SoftwareResult == WinForms.DialogResult.OK)
+                Microsoft.Win32.SaveFileDialog saveDlg = new Microsoft.Win32.SaveFileDialog();
+                saveDlg.FileName = "PS3UPDAT"; // Default file name
+                saveDlg.DefaultExt = ".PUP"; // Default file extension
+
+                Nullable<bool> result = saveDlg.ShowDialog();
+
+                if (result == true)
                 {
-                    ps3Software = Path.Combine(ps3SoftwarePathDialog.SelectedPath, "PS3UPDAT.PUP");
+                    string filename = saveDlg.FileName;
+                    string filepath = Path.GetFullPath(saveDlg.FileName);
+                    ps3Software = Path.Combine(filepath, filename);
 
                     pb.Visibility = Visibility.Visible;
                     DLStatus.Visibility = Visibility.Visible;

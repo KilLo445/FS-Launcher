@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.1";
+        string launcherVersion = "1.1.2";
 
         // Paths
         private string rootPath;
@@ -123,7 +123,14 @@ namespace FS_Launcher
         {
             if (Directory.Exists(fsTemp))
             {
-                Directory.Delete(fsTemp, true);
+                try
+                {
+                    Directory.Delete(fsTemp, true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -192,10 +199,9 @@ namespace FS_Launcher
 
                                 RestartFSL();
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                SystemSounds.Exclamation.Play();
-                                MessageBox.Show("Error resetting FS Launcher.");
+                                MessageBox.Show($"Error Resetting Launcher: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 RestartFSL();
                             }
                         }
@@ -292,7 +298,7 @@ namespace FS_Launcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error checking for updates:\n{ex}", "Error");
+                    MessageBox.Show($"Error checking for updates: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
@@ -310,8 +316,7 @@ namespace FS_Launcher
             }
             catch (Exception ex)
             {
-                SystemSounds.Exclamation.Play();
-                MessageBox.Show($"Error: {ex}");
+                MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -334,7 +339,7 @@ namespace FS_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error launching Ghost Recon: Future Soldier:\n\n{ex}");
+                MessageBox.Show($"Error launching Ghost Recon: Future Soldier: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -541,7 +546,7 @@ namespace FS_Launcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error:\n\n{ex}");
+                MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -224,7 +224,7 @@ namespace FS_Launcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error\n{ex}");
+                    MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
@@ -235,7 +235,7 @@ namespace FS_Launcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error\n{ex}");
+                    MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

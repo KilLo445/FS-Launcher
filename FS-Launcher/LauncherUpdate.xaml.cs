@@ -90,14 +90,28 @@ namespace FS_Launcher
         {
             if (File.Exists(updater))
             {
-                Process.Start(updater);
-                Application.Current.Shutdown();
+                try
+                {
+                    Process.Start(updater);
+                    Application.Current.Shutdown();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            try
+            {
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
