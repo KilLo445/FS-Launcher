@@ -1,5 +1,8 @@
 # FS Launcher Changelog  
     
+v1.1.2  
+- Small changes and fixes  
+
 v1.1.1  
 - Small changes and fixes  
 
