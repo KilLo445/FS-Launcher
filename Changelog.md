@@ -1,5 +1,9 @@
 # FS Launcher Changelog  
     
+v1.1.3  
+- "Play" button now attemps to launch game through steam if it detects that the game is installed through steam
+- Small changes and fixes  
+
 v1.1.2  
 - Small changes and fixes  
 
