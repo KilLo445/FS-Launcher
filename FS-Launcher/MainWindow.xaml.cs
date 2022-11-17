@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.3";
+        string launcherVersion = "1.1.4";
 
         // Paths
         private string rootPath;
@@ -386,6 +386,12 @@ namespace FS_Launcher
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                LaunchGRFSExe();
+                return;
+            }
+
             using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey("Software\\Wow6432Node\\Valve\\Steam"))
             {
                 if (regKey != null)
@@ -400,6 +406,10 @@ namespace FS_Launcher
                     {
                         steamInstalled = false;
                     }
+                }
+                else
+                {
+                    steamInstalled = false;
                 }
             }
 
@@ -425,16 +435,19 @@ namespace FS_Launcher
                     catch
                     {
                         LaunchGRFSExe();
+                        return;
                     }
                 }
                 else
                 {
                     LaunchGRFSExe();
+                    return;
                 }
             }
             else
             {
                 LaunchGRFSExe();
+                return;
             }
         }
 
