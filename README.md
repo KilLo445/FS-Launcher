@@ -7,7 +7,7 @@ FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's G
 
 ## How to use 
 ### Play   
-Attempts to launch the game directly from the EXE.  
+Attempts to launch the game through steam or directly from the EXE.  
 ### Firewall   
 Creates required firewall rule to block broken IPs that Future Soldier connects to.  
 ### Unlock DLC   
