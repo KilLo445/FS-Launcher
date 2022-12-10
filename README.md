@@ -31,4 +31,4 @@ Changelog can be found [here](https://github.com/KilLo445/FS-Launcher/blob/maste
 This launcher automatically updates, so you should not have to manually update, however you can manually check for updates by clicking the version text in the bottom right corner.
 
 ## Help
-This launcher is developed and maintained by KilLo/DecentLoser. If you need any help please open an issue on GitHub, or DM me on [discord](https://discord.gg/66qymzdtMw).  
+This launcher is developed and maintained by KilLo/DecentLoser. If you need any help please [open an issue](https://github.com/KilLo445/FS-Launcher/issues/new/choose) on GitHub, or DM me on [discord](https://discord.gg/66qymzdtMw).
