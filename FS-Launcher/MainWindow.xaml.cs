@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.4";
+        string launcherVersion = "1.1.5";
 
         // Paths
         private string rootPath;
@@ -216,6 +216,7 @@ namespace FS_Launcher
             {
                 RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
                 Object obFirstRun = keyFSL.GetValue("FirstRun");
+                Object obFirstPlay = keyFSL.GetValue("FirstPlay");
                 Object obFirewall = keyFSL.GetValue("Firewall");
                 if (obFirstRun != null)
                 {
@@ -223,6 +224,14 @@ namespace FS_Launcher
                     if (strFirstRun == "1")
                     {
                         keyFSL.SetValue("FirstRun", "0");
+                    }
+                }
+                if (obFirstPlay != null)
+                {
+                    string strFirstPlay = (obFirstPlay as String);
+                    if (strFirstPlay == "1")
+                    {
+                        keyFSL.SetValue("FirstPlay", "0");
                     }
                 }
                 if (obFirewall != null)
@@ -386,6 +395,25 @@ namespace FS_Launcher
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
         {
+            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+            Object obFirstPlay = keyFSL.GetValue("FirstPlay");
+
+            if (obFirstPlay != null)
+            {
+                string strFirstPlay = (obFirstPlay as String);
+                if (strFirstPlay == "0")
+                {
+                    keyFSL.SetValue("FirstPlay", "1");
+                    MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can hold Left Shift while clicking the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            if (obFirstPlay == null)
+            {
+                keyFSL.SetValue("FirstPlay", "1");
+                MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can hold Left Shift while clicking the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            keyFSL.Close();
+
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
                 LaunchGRFSExe();
