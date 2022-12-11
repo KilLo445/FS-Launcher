@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.5";
+        string launcherVersion = "1.1.6";
 
         // Paths
         private string rootPath;
@@ -795,6 +795,16 @@ namespace FS_Launcher
                 {
                     MessageBox.Show("No update is available.", "Check for updates");
                 }
+            }
+        }
+
+        private void VersionText_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult viewChangelog = MessageBox.Show("Do you want to view the changelog?", "Changelog", MessageBoxButton.YesNo);
+            if (viewChangelog == MessageBoxResult.Yes)
+            {
+                Changelog changelogWindow = new Changelog();
+                changelogWindow.Show();
             }
         }
 

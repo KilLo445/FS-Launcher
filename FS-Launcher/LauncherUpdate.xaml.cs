@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Windows;
 
@@ -112,6 +113,12 @@ namespace FS_Launcher
             {
                 MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void ChangeLogButton_Click(object sender, RoutedEventArgs e)
+        {
+            Changelog changelogWindow = new Changelog();
+            changelogWindow.Show();
         }
 
         private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

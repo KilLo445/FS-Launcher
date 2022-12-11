@@ -32,7 +32,7 @@
 
         <Image Name="GitHubLogo" Source="Images/Logo/GitHub/GitHub_Blue1.png" MouseLeftButtonDown="GitHubLogo_MouseLeftButtonDown" MouseEnter="GitHubLogo_MouseEnter" MouseLeave="GitHubLogo_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="120" Height="60" Margin="5,0,0,38"/>
 
-        <TextBlock Name="VersionText" Text="" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,52" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates."/>
+        <TextBlock Name="VersionText" Text="" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,52" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" MouseRightButtonDown="VersionText_MouseRightButtonDown" ToolTip="Click to check for updates, right click for changelog"/>
         <ProgressBar Name="pb" Visibility="Hidden" Width="340" Height="15" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
     </Grid>
 </Window>

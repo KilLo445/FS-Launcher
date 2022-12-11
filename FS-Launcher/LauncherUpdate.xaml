@@ -18,10 +18,11 @@
         <TextBlock Text="Launcher Update" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="35" FontWeight="Light" FontFamily="/Fonts/#Poppins" Margin="0,30,0,0"/>
         <TextBlock Text="An update for the launcher has been found! Would you like to download it?" Foreground="White" Width="300" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18" FontWeight="Light" FontFamily="/Fonts/#Poppins" TextWrapping="Wrap" TextAlignment="Center" Margin="0,150,0,0"/>
 
-        <TextBlock Name="InstalledVersion" Text="" Foreground="White" Width="300" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" FontWeight="Light" FontFamily="/Fonts/#Poppins" TextWrapping="Wrap" TextAlignment="Center" Margin="0,220,0,0"/>
-        <TextBlock Name="UpdateVersion" Text="" Foreground="White" Width="300" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" FontWeight="Light" FontFamily="/Fonts/#Poppins" TextWrapping="Wrap" TextAlignment="Center" Margin="0,250,0,0"/>
+        <TextBlock Name="InstalledVersion" Text="" Foreground="White" Width="300" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" FontWeight="Light" FontFamily="/Fonts/#Poppins" TextWrapping="Wrap" TextAlignment="Center" Margin="0,210,0,0"/>
+        <TextBlock Name="UpdateVersion" Text="" Foreground="White" Width="300" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" FontWeight="Light" FontFamily="/Fonts/#Poppins" TextWrapping="Wrap" TextAlignment="Center" Margin="0,240,0,0"/>
 
-        <Button Name="YesButton" Width="100" Height="40" Content="Yes" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,130,50" Click="YesButton_Click" Style="{StaticResource ButtonTheme3}"/>
-        <Button Name="NoButton" Width="100" Height="40" Content="No" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="130,0,0,50" Click="NoButton_Click" Style="{StaticResource ButtonTheme3}"/>
+        <Button Name="YesButton" Width="100" Height="40" Content="Yes" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,130,80" Click="YesButton_Click" Style="{StaticResource ButtonTheme3}"/>
+        <Button Name="NoButton" Width="100" Height="40" Content="No" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="130,0,0,80" Click="NoButton_Click" Style="{StaticResource ButtonTheme3}"/>
+        <Button Name="ChangeLogButton" Width="120" Height="40" Content="View Changelog" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" Click="ChangeLogButton_Click" Style="{StaticResource ButtonTheme3}"/>
     </Grid>
 </Window>
