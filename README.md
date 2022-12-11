@@ -25,7 +25,7 @@ Most buttons have a right click function as well, right click usually works as a
 If you would like to reset the launcher, hold left shift while opening the launcher.  
   
 ## Changelog
-Changelog can be found [here](https://github.com/KilLo445/FS-Launcher/blob/master/Changelog.md)  
+Changelog can be found [here](https://pastebin.com/raw/znP4q1p2)  
   
 ## Updates
 This launcher automatically updates, so you should not have to manually update, however you can manually check for updates by clicking the version text in the bottom right corner.
