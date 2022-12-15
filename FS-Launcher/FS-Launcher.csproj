@@ -69,6 +69,9 @@
     <Compile Include="Changelog.xaml.cs">
       <DependentUpon>Changelog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extras.xaml.cs">
+      <DependentUpon>Extras.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Punkbuster.xaml.cs">
       <DependentUpon>Punkbuster.xaml</DependentUpon>
     </Compile>
@@ -76,6 +79,10 @@
       <DependentUpon>RPCS3.xaml</DependentUpon>
     </Compile>
     <Page Include="Changelog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Extras.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

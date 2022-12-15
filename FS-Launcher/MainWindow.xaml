@@ -28,11 +28,11 @@
         <Button Name="FirewallButton" Content="FIREWALL" Click="FirewallButton_Click" MouseRightButtonDown="FirewallButton_MouseRightButtonDown" Width="200" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,200,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="UnlockDLCButton" Content="UNLOCK DLC" Click="UnlockDLCButton_Click" MouseRightButtonDown="UnlockDLCButton_MouseRightButtonDown" Width="260" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,240,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="PunkbusterButton" Content="PUNKBUSTER" Click="PunkbusterButton_Click" Width="280" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,280,0,0" Style="{StaticResource ButtonTheme1}"/>
-        <Button Name="RPCS3Button" Content="RPCS3" Click="RPCS3Button_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0" Style="{StaticResource ButtonTheme1}"/>
+        <Button Name="ExtrasButton" Content="EXTRAS" Click="ExtrasButton_Click" Width="160" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0" Style="{StaticResource ButtonTheme1}"/>
 
         <Image Name="GitHubLogo" Source="Images/Logo/GitHub/GitHub_Blue1.png" MouseLeftButtonDown="GitHubLogo_MouseLeftButtonDown" MouseEnter="GitHubLogo_MouseEnter" MouseLeave="GitHubLogo_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="120" Height="60" Margin="5,0,0,38"/>
 
-        <TextBlock Name="VersionText" Text="" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,52" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" MouseRightButtonDown="VersionText_MouseRightButtonDown" ToolTip="Click to check for updates, right click for changelog"/>
+        <TextBlock Name="VersionText" Text="" Foreground="Gray" FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,52" FontFamily="/Fonts/#Poppins" FontWeight="Light" MouseLeftButtonDown="VersionText_MouseLeftButtonDown" ToolTip="Click to check for updates, right click for changelog"/>
         <ProgressBar Name="pb" Visibility="Hidden" Width="340" Height="15" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
     </Grid>
 </Window>

@@ -16,7 +16,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.6";
+        string launcherVersion = "1.1.7";
 
         // Paths
         private string rootPath;
@@ -641,7 +641,7 @@ namespace FS_Launcher
                     FirewallButton.IsEnabled = false;
                     UnlockDLCButton.IsEnabled = false;
                     PunkbusterButton.IsEnabled = false;
-                    RPCS3Button.IsEnabled = false;
+                    ExtrasButton.IsEnabled = false;
                     pb.Visibility = Visibility.Visible;
 
                     CreateTemp();
@@ -687,7 +687,7 @@ namespace FS_Launcher
                 FirewallButton.IsEnabled = true;
                 UnlockDLCButton.IsEnabled = true;
                 PunkbusterButton.IsEnabled = true;
-                RPCS3Button.IsEnabled = true;
+                ExtrasButton.IsEnabled = true;
                 pb.Visibility = Visibility.Hidden;
 
                 SystemSounds.Exclamation.Play();
@@ -757,11 +757,11 @@ namespace FS_Launcher
             }
         }
 
-        private void RPCS3Button_Click(object sender, RoutedEventArgs e)
+        private void ExtrasButton_Click(object sender, RoutedEventArgs e)
         {
-            RPCS3 rpcs3Window = new RPCS3();
+            Extras extrasWindow = new Extras();
             this.Close();
-            rpcs3Window.Show();
+            extrasWindow.Show();
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -795,16 +795,6 @@ namespace FS_Launcher
                 {
                     MessageBox.Show("No update is available.", "Check for updates");
                 }
-            }
-        }
-
-        private void VersionText_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBoxResult viewChangelog = MessageBox.Show("Do you want to view the changelog?", "Changelog", MessageBoxButton.YesNo);
-            if (viewChangelog == MessageBoxResult.Yes)
-            {
-                Changelog changelogWindow = new Changelog();
-                changelogWindow.Show();
             }
         }
 
@@ -888,5 +878,7 @@ namespace FS_Launcher
                 return $"{major}.{minor}.{subMinor}";
             }
         }
+
+        
     }
 }
