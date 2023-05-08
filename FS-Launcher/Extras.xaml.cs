@@ -4,9 +4,6 @@ using System.Windows.Input;
 
 namespace FS_Launcher
 {
-    /// <summary>
-    /// Interaction logic for Extras.xaml
-    /// </summary>
     public partial class Extras : Window
     {
         public Extras()
@@ -24,32 +21,52 @@ namespace FS_Launcher
 
         private void CloseButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Application.Current.Shutdown();
+            try
+            {
+                Application.Current.Shutdown();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void MinimizeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            try
+            {
+                this.WindowState = WindowState.Minimized;
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void RPCS3Button_Click(object sender, RoutedEventArgs e)
         {
-            RPCS3 rpcs3Window = new RPCS3();
-            this.Close();
-            rpcs3Window.Show();
+            try
+            {
+                RPCS3 rpcs3Window = new RPCS3();
+                this.Close();
+                rpcs3Window.Show();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void ChangelogButton_Click(object sender, RoutedEventArgs e)
         {
-            Changelog changelogWindow = new Changelog();
-            changelogWindow.Show();
+            try
+            {
+                Changelog changelogWindow = new Changelog();
+                changelogWindow.Show();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mWindow = new MainWindow();
-            this.Close();
-            mWindow.Show();
+            try
+            {
+                MainWindow mWindow = new MainWindow();
+                this.Close();
+                mWindow.Show();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
 }

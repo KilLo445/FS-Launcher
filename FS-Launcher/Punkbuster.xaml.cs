@@ -87,7 +87,11 @@ namespace FS_Launcher
 
         private void PnkBstrLogo_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start("https://www.evenbalance.com/");
+            try
+            {
+                Process.Start("https://www.evenbalance.com/");
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void CheckSys32_Click(object sender, RoutedEventArgs e)
@@ -241,9 +245,13 @@ namespace FS_Launcher
         }
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mwindow = new MainWindow();
-            mwindow.Show();
-            this.Close();
+            try
+            {
+                MainWindow mwindow = new MainWindow();
+                mwindow.Show();
+                this.Close();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
     }
 }

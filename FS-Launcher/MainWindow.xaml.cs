@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Media;
 using System.Net;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -16,7 +17,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.7";
+        string launcherVersion = "1.1.8";
 
         // Paths
         private string rootPath;
@@ -111,11 +112,14 @@ namespace FS_Launcher
 
         private void DumpVersion()
         {
-            File.WriteAllText(versionFile, launcherVersion);
-
-            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
-            keyFSL.SetValue("Version", $"{launcherVersion}");
-            keyFSL.Close();
+            try
+            {
+                File.WriteAllText(versionFile, launcherVersion);
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                keyFSL.SetValue("Version", $"{launcherVersion}");
+                keyFSL.Close();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void CreateTemp()
@@ -131,10 +135,7 @@ namespace FS_Launcher
                 {
                     Directory.Delete(fsTemp, true);
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                catch(Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
             }
         }
 
@@ -200,10 +201,7 @@ namespace FS_Launcher
                             {
                                 ResetFSL();
                             }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"{ex}", "Error Resetting Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
-                            }
+                            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
                         }
                     }
                 }
@@ -266,10 +264,7 @@ namespace FS_Launcher
 
                 RestartFSL();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex}", "Error Resetting Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void FirstRun()
@@ -358,10 +353,7 @@ namespace FS_Launcher
                         updateAvailable = false;
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error checking for updates: {ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
             }
             else
             {
@@ -377,10 +369,51 @@ namespace FS_Launcher
                 LauncherUpdate updateWindow = new LauncherUpdate();
                 updateWindow.Show();
             }
-            catch (Exception ex)
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+        }
+
+        private async Task ExtractZipAsync(string zipfile, string output)
+        {
+            try
             {
-                MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                pb.IsIndeterminate = true;
+                await Task.Run(() => ZipFile.ExtractToDirectory(zipfile, output));
+                File.Delete(dlcBin);
+
+                foreach (string dirPath in Directory.GetDirectories(dlcTemp, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(dlcTemp, dlcPath));
+                }
+
+                foreach (string newPath in Directory.GetFiles(dlcTemp, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(dlcTemp, dlcPath), true);
+                }
+
+                Directory.Delete(dlcTemp, true);
+
+                File.Copy(dlcSave, dlcSaveBak);
+                File.Delete(dlcSave);
+                File.Copy(dlcSaveTemp, dlcSave);
+
+                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+                keyFSL.SetValue("DLC", "1");
+                keyFSL.Close();
+
+                CloseButton.IsEnabled = true;
+                LaunchButton.IsEnabled = true;
+                FirewallButton.IsEnabled = true;
+                UnlockDLCButton.IsEnabled = true;
+                PunkbusterButton.IsEnabled = true;
+                ExtrasButton.IsEnabled = true;
+                pb.Visibility = Visibility.Hidden;
+
+                SystemSounds.Exclamation.Play();
+                MessageBox.Show("DLC Unlocked!");
+
+                return;
             }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void CloseButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -390,7 +423,11 @@ namespace FS_Launcher
 
         private void MinimizeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            try
+            {
+                this.WindowState = WindowState.Minimized;
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void LaunchButton_Click(object sender, RoutedEventArgs e)
@@ -486,10 +523,7 @@ namespace FS_Launcher
                 Process.Start(grfsExe);
                 Application.Current.Shutdown();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex}", "Error launching Ghost Recon: Future Soldier", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void FirewallButton_Click(object sender, RoutedEventArgs e)
@@ -650,7 +684,7 @@ namespace FS_Launcher
                     WebClient webClient = new WebClient();
                     webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DLCDownloadCompletedCallback);
                     webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                    webClient.DownloadFileAsync(new Uri("https://www.dropbox.com/s/rdmjk53ozbm8agn/dlc.bin?dl=1"), dlcBin);
+                    webClient.DownloadFileAsync(new Uri("https://www.dropbox.com/s/sqm0rsqg5xs3yj9/dlc.bin?dl=1"), dlcBin);
                 }
             }
         }
@@ -659,44 +693,9 @@ namespace FS_Launcher
         {
             try
             {
-                ZipFile.ExtractToDirectory(dlcBin, fsTemp);
-                File.Delete(dlcBin);
-
-                foreach (string dirPath in Directory.GetDirectories(dlcTemp, "*", SearchOption.AllDirectories))
-                {
-                    Directory.CreateDirectory(dirPath.Replace(dlcTemp, dlcPath));
-                }
-
-                foreach (string newPath in Directory.GetFiles(dlcTemp, "*.*", SearchOption.AllDirectories))
-                {
-                    File.Copy(newPath, newPath.Replace(dlcTemp, dlcPath), true);
-                }
-
-                Directory.Delete(dlcTemp, true);
-
-                File.Copy(dlcSave, dlcSaveBak);
-                File.Delete(dlcSave);
-                File.Copy(dlcSaveTemp, dlcSave);
-
-                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
-                keyFSL.SetValue("DLC", "1");
-                keyFSL.Close();
-
-                CloseButton.IsEnabled = true;
-                LaunchButton.IsEnabled = true;
-                FirewallButton.IsEnabled = true;
-                UnlockDLCButton.IsEnabled = true;
-                PunkbusterButton.IsEnabled = true;
-                ExtrasButton.IsEnabled = true;
-                pb.Visibility = Visibility.Hidden;
-
-                SystemSounds.Exclamation.Play();
-                MessageBox.Show("DLC Unlocked!");
+                ExtractZipAsync(dlcBin, fsTemp);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void UnlockDLCButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -746,9 +745,13 @@ namespace FS_Launcher
         {
             if (IsAdministrator())
             {
-                Punkbuster pnkbstrWindow = new Punkbuster();
-                this.Close();
-                pnkbstrWindow.Show();
+                try
+                {
+                    Punkbuster pnkbstrWindow = new Punkbuster();
+                    this.Close();
+                    pnkbstrWindow.Show();
+                }
+                catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
             }
             else
             {
@@ -759,9 +762,13 @@ namespace FS_Launcher
 
         private void ExtrasButton_Click(object sender, RoutedEventArgs e)
         {
-            Extras extrasWindow = new Extras();
-            this.Close();
-            extrasWindow.Show();
+            try
+            {
+                Extras extrasWindow = new Extras();
+                this.Close();
+                extrasWindow.Show();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -771,17 +778,29 @@ namespace FS_Launcher
 
         private void GitHubLogo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://github.com/KilLo445/FS-Launcher");
+            try
+            {
+                Process.Start("https://github.com/KilLo445/FS-Launcher");
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void GitHubLogo_MouseEnter(object sender, MouseEventArgs e)
         {
-            this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue2.png"));
+            try
+            {
+                this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue2.png"));
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void GitHubLogo_MouseLeave(object sender, MouseEventArgs e)
         {
-            this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue1.png"));
+            try
+            {
+                this.GitHubLogo.Source = new BitmapImage(new Uri("pack://application:,,,/Images/Logo/GitHub/GitHub_Blue1.png"));
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void VersionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

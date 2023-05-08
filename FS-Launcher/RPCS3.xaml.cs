@@ -80,14 +80,22 @@ namespace FS_Launcher
 
         private void RPCS3Logo_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Process.Start(rpcs3Site);
+            try
+            {
+                Process.Start(rpcs3Site);
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void CloseButton_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            MainWindow mwindow = new MainWindow();
-            mwindow.Show();
-            this.Close();
+            try
+            {
+                MainWindow mwindow = new MainWindow();
+                mwindow.Show();
+                this.Close();
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void GetCFG()
