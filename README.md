@@ -32,3 +32,7 @@ This launcher automatically updates, so you should not have to manually update, 
 
 ## Help
 This launcher is developed and maintained by KilLo/DecentLoser. If you need any help please [open an issue](https://github.com/KilLo445/FS-Launcher/issues/new/choose) on GitHub, DM me on [discord](https://discord.gg/66qymzdtMw), or contact me [somewhere else](https://linktr.ee/KilLo).
+
+## Building
+To build FS Launcher from source, download the [master zip](https://github.com/KilLo445/FS-Launcher/archive/refs/heads/master.zip) and open "FS-Launcher.sln" in Visual Studio 2022, then go to Build -> Build FS-Launcher.
+
