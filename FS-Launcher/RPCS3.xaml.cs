@@ -46,6 +46,8 @@ namespace FS_Launcher
         {
             InitializeComponent();
 
+            MessageBox.Show("Please note:\n\nThe RPCS3 feature of FS Launcher is no longer maintained or supported, the reason for the RPCS3 feature is irrelevent now. It will probably get removed at some point in the future.", "RPCS3", MessageBoxButton.OK, MessageBoxImage.Warning);
+
             rootPath = Directory.GetCurrentDirectory();
             tempPath = Path.GetTempPath();
             localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

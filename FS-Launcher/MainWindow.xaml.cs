@@ -17,7 +17,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.8";
+        string launcherVersion = "1.1.9";
 
         // Paths
         private string rootPath;
@@ -187,84 +187,9 @@ namespace FS_Launcher
         {
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
-                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
-                Object obFirstRun = keyFSL.GetValue("FirstRun");
-                if (obFirstRun != null)
-                {
-                    string strFirstRun = (obFirstRun as String);
-                    if (strFirstRun == "1")
-                    {
-                        MessageBoxResult resetSoftware = MessageBox.Show("Are you sure you want to reset FS Launcher?", "Reset", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                        if (resetSoftware == MessageBoxResult.Yes)
-                        {
-                            try
-                            {
-                                ResetFSL();
-                            }
-                            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
-                        }
-                    }
-                }
+                MessageBox.Show("Resetting FS Launcher is now done through the extas menu.", "Reset FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
-        }
-
-        private void ResetFSL()
-        {
-            try
-            {
-                RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
-                Object obFirstRun = keyFSL.GetValue("FirstRun");
-                Object obFirstPlay = keyFSL.GetValue("FirstPlay");
-                Object obFirewall = keyFSL.GetValue("Firewall");
-                if (obFirstRun != null)
-                {
-                    string strFirstRun = (obFirstRun as String);
-                    if (strFirstRun == "1")
-                    {
-                        keyFSL.SetValue("FirstRun", "0");
-                    }
-                }
-                if (obFirstPlay != null)
-                {
-                    string strFirstPlay = (obFirstPlay as String);
-                    if (strFirstPlay == "1")
-                    {
-                        keyFSL.SetValue("FirstPlay", "0");
-                    }
-                }
-                if (obFirewall != null)
-                {
-                    string strFirewall = (obFirewall as String);
-                    if (strFirewall == "1")
-                    {
-                        resetFirewall = false;
-                        while (resetFirewall == false)
-                        {
-                            try
-                            {
-                                Process proc = new Process();
-                                proc.StartInfo.FileName = firewallBatDelete;
-                                proc.StartInfo.UseShellExecute = true;
-                                proc.StartInfo.Verb = "runas";
-                                proc.Start();
-                                resetFirewall = true;
-                            }
-                            catch
-                            {
-                                resetFirewall = false;
-                                MessageBox.Show("Please accept the admin prompt.");
-                            }
-                        }
-
-                        keyFSL.SetValue("Firewall", "0");
-                        keyFSL.DeleteValue("GRFSPath");
-                        keyFSL.Close();
-                    }
-                }
-
-                RestartFSL();
-            }
-            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
         private void FirstRun()
@@ -441,21 +366,15 @@ namespace FS_Launcher
                 if (strFirstPlay == "0")
                 {
                     keyFSL.SetValue("FirstPlay", "1");
-                    MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can hold Left Shift while clicking the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can right click the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             if (obFirstPlay == null)
             {
                 keyFSL.SetValue("FirstPlay", "1");
-                MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can hold Left Shift while clicking the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The launcher will now attempt to check if you own the game on steam, if you do, it will attempt to launch through steam.\n\nYou can right click the play button to bypass this check and launch directly from the EXE.", "", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             keyFSL.Close();
-
-            if (Keyboard.IsKeyDown(Key.LeftShift))
-            {
-                LaunchGRFSExe();
-                return;
-            }
 
             using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey("Software\\Wow6432Node\\Valve\\Steam"))
             {
@@ -516,6 +435,12 @@ namespace FS_Launcher
             }
         }
 
+        private void LaunchEXE_Click(object sender, RoutedEventArgs e)
+        {
+            LaunchGRFSExe();
+            return;
+        }
+
         private void LaunchGRFSExe()
         {
             try
@@ -562,7 +487,7 @@ namespace FS_Launcher
             }
         }
 
-        private void FirewallButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void DeleteFirewall_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult firewallMessageBox2 = System.Windows.MessageBox.Show("Are you sure you want to delete the Firewall Rule in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
             if (firewallMessageBox2 == MessageBoxResult.Yes)
@@ -698,7 +623,7 @@ namespace FS_Launcher
             catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
-        private void UnlockDLCButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void DeleteDLC_Click(object sender, RoutedEventArgs e)
         {
             RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
             Object obDLC = keyFSL.GetValue("DLC");
@@ -897,7 +822,5 @@ namespace FS_Launcher
                 return $"{major}.{minor}.{subMinor}";
             }
         }
-
-        
     }
 }

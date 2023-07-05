@@ -25,7 +25,7 @@
 
         <Button Name="RPCS3Button" Content="RPCS3" Click="RPCS3Button_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,160,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="ChangelogButton" Content="CHANGELOG" Click="ChangelogButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,200,0,0" Style="{StaticResource ButtonTheme1}"/>
-        <Button Content="" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,240,0,0" Style="{StaticResource ButtonTheme1}"/>
+        <Button Name="ResetButton" Content="RESET" Click="ResetButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,240,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Content="" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,280,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="BackButton" Content="BACK" Click="BackButton_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0" Style="{StaticResource ButtonTheme1}"/>
 
