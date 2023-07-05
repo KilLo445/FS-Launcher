@@ -7,8 +7,8 @@ FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's G
 
 ## How to use 
 ### Play   
-Attempts to launch the game through steam or directly from the EXE.  
-Hold Left Shift to bypass steam check and launch directly from EXE.
+Attempts to launch the game through Steam or directly from the EXE.  
+Right click to bypass Steam check and launch directly from EXE.
 ### Firewall   
 Creates required firewall rule to block broken IPs that Future Soldier connects to.  
 ### Unlock DLC   
