@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Input;
@@ -7,6 +8,10 @@ namespace FS_Launcher
 {
     public partial class Changelog : Window
     {
+        private string rootPath;
+        private string tempPath;
+        private string fsTemp;
+
         string changelogLink = "https://pastebin.com/raw/znP4q1p2";
         string changelogContent;
 
@@ -16,13 +21,23 @@ namespace FS_Launcher
         {
             InitializeComponent();
 
+            ChangelogText.Text = "Downloading changelog...";
+            ChangelogText.FontSize = fontSize;
+
+            rootPath = Directory.GetCurrentDirectory();
+            tempPath = Path.GetTempPath();
+            fsTemp = Path.Combine(tempPath, "FS Launcher");
+
             this.Topmost = true;
 
-            WebClient webClient = new WebClient();
-            changelogContent = webClient.DownloadString(changelogLink);
+            WebClient wc = new WebClient();
+            wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+            wc.DownloadStringAsync(new Uri(changelogLink));
+        }
 
-            ChangelogText.Text = changelogContent;
-            ChangelogText.FontSize = fontSize;
+        private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            ChangelogText.Text = e.Result;
         }
 
         private void FontSizeIncrease_Click(object sender, RoutedEventArgs e)

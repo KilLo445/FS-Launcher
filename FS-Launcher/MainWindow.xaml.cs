@@ -17,7 +17,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.1.9";
+        string launcherVersion = "1.2.0";
 
         // Paths
         private string rootPath;
@@ -89,6 +89,7 @@ namespace FS_Launcher
             firewallBatDelete = Path.Combine(rootPath, "files", "firewall", "windows", "delete_firewall_rule_windows.bat");
 
             VersionText.Text = $"v{launcherVersion}";
+            File.WriteAllText(versionFile, launcherVersion);
 
             CreateReg();
 
@@ -640,6 +641,7 @@ namespace FS_Launcher
 
             if (strDLC != "1")
             {
+                MessageBox.Show("DLC does not seem to be unlocked.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

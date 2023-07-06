@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("Ghost Recon: Future Soldier Launcher")]
 [assembly: AssemblyDescription("Ghost Recon: Future Soldier Launcher")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("KilLo")]
 [assembly: AssemblyProduct("FS-Launcher")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

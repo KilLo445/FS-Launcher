@@ -33,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>GRFS.ico</ApplicationIcon>
@@ -168,6 +169,9 @@
     </None>
     <Resource Include="Fonts\Eurostile\Eurostile Extended-Regular.ttf" />
     <Resource Include="Fonts\Eurostile\Eurostile Extended-Bold.ttf" />
+    <None Include="files\flushdns.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
