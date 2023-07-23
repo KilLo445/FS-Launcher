@@ -76,9 +76,6 @@
     <Compile Include="Punkbuster.xaml.cs">
       <DependentUpon>Punkbuster.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RPCS3.xaml.cs">
-      <DependentUpon>RPCS3.xaml</DependentUpon>
-    </Compile>
     <Page Include="Changelog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,10 +104,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Punkbuster.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="RPCS3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,6 +165,10 @@
     <None Include="files\flushdns.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="files\nointro\NoIntro.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="files\nointro\OriginalLogos.bin" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -205,9 +202,6 @@
     <Resource Include="Images\Logo\RPCS3\Full\Color\1024.png" />
     <Resource Include="Images\Logo\RPCS3\Full\Color\2048.png" />
     <Resource Include="Images\Logo\RPCS3\Full\Color\4096.png" />
-    <None Include="RPCS3.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="updater.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -23,7 +23,14 @@
         <TextBlock Name="CloseButton" Text="X" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" Style="{StaticResource CloseMinimizeButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Margin="0,62,5,0" Grid.Column="1" Grid.RowSpan="2"/>
         <TextBlock Name="MinimizeButton" Text="_" MouseLeftButtonDown="MinimizeButton_MouseLeftButtonDown" Style="{StaticResource CloseMinimizeButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Height="30" Margin="0,60.15,25,0"/>
 
-        <Button Name="RPCS3Button" Content="RPCS3" ToolTip="Setup RPCS3 for Lan Play. (No longer maintained)" Click="RPCS3Button_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,160,0,0" Style="{StaticResource ButtonTheme1}"/>
+        <Button Name="NoIntroButton" Content="NO INTRO" ToolTip="Remove intro logos" Click="NoIntroButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,160,0,0" Style="{StaticResource ButtonTheme1}">
+            <Button.ContextMenu>
+                <ContextMenu Name="cmOriginalLogos" StaysOpen="true">
+                    <MenuItem Name="OriginalLogos" Header="Install original logos"
+                              Click="OriginalLogos_Click"/>
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
         <Button Name="ChangelogButton" Content="CHANGELOG" ToolTip="View launcher changelog." Click="ChangelogButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,200,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="ResetButton" Content="RESET" ToolTip="Reset FS Launcher." Click="ResetButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,240,0,0" Style="{StaticResource ButtonTheme1}"/>
         <Button Name="HostsButton" Content="HOSTS" ToolTip="Create hosts entries. (Recommended)" Click="HostsButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,280,0,0" Style="{StaticResource ButtonTheme1}">
@@ -36,8 +43,9 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
-        <Button Name="BackButton" Content="BACK" ToolTip="Go back to the main options." Click="BackButton_Click" Width="140" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0" Style="{StaticResource ButtonTheme1}"/>
+        <Button Name="BackButton" Content="BACK" ToolTip="Go back to the main options." Click="BackButton_Click" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15,320,0,0" Style="{StaticResource ButtonTheme1}"/>
 
         <TextBlock Text="EXTRAS" FontSize="30" FontWeight="Bold" Foreground="#2d90a6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="120" Height="40" Margin="14,0,0,45"/>
+        <ProgressBar Name="pb" Visibility="Hidden" Width="340" Height="15" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
     </Grid>
 </Window>

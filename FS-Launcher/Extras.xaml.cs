@@ -1,7 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.Net;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -14,6 +18,8 @@ namespace FS_Launcher
         string tempPath;
         string fsTemp;
 
+        string gamePath;
+
         string fsLauncher;
 
         string firewallBatCreate;
@@ -22,6 +28,9 @@ namespace FS_Launcher
 
         string hostsFile;
         string hostsBackup;
+
+        string noIntroBin;
+        string ogLogosBin;
 
         public static bool IsAdministrator()
         {
@@ -46,6 +55,9 @@ namespace FS_Launcher
 
             hostsFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"drivers\etc\hosts"));
             hostsBackup = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"drivers\etc\hosts.bak"));
+
+            noIntroBin = Path.Combine(rootPath, "files", "nointro", "NoIntro.bin");
+            ogLogosBin = Path.Combine(fsTemp, "NoIntro", "OriginalLogos.bin");
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -74,13 +86,102 @@ namespace FS_Launcher
             catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
-        private void RPCS3Button_Click(object sender, RoutedEventArgs e)
+        private async Task ExtractZipAsync(string zipfile, string output)
         {
             try
             {
-                RPCS3 rpcs3Window = new RPCS3();
-                this.Close();
-                rpcs3Window.Show();
+                pb.IsIndeterminate = true;
+                await Task.Run(() => ZipFile.ExtractToDirectory(zipfile, output));
+                File.Delete(zipfile);
+                Directory.Delete(fsTemp, true);
+                pb.Visibility = Visibility.Hidden;
+                MessageBox.Show("Original Intros installed!", "No Intro", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+        }
+
+        private void NoIntroButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult noIntro = MessageBox.Show("Are you sure you want to install No Intro?", "No Intro", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (noIntro == MessageBoxResult.Yes)
+            {
+                using (RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher"))
+                {
+                    if (keyFSL != null)
+                    {
+                        Object obGRFSPath = keyFSL.GetValue("GRFSPath");
+                        if (obGRFSPath != null)
+                        {
+                            gamePath = (obGRFSPath as String);
+                        }
+
+                        keyFSL.Close();
+                    }
+                }
+
+                try
+                {
+                    File.Delete(Path.Combine(gamePath, "Video", "SPL_ESRB_UBI_CLANCY.bik"));
+                    File.Delete(Path.Combine(gamePath, "Video", "SPL_Intro_Trailer.bik"));
+                    File.Delete(Path.Combine(gamePath, "Video", "SPL_RSE_Logo_fade.bik"));
+
+                    ZipFile.ExtractToDirectory(noIntroBin, Path.Combine(gamePath, "Video"));
+
+                    MessageBox.Show("No Intro installed!", "No Intro", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            }
+            else { return; }
+        }
+
+        private void OriginalLogos_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult ogIntro = MessageBox.Show("Are you sure you want to install the Original Intros?", "No Intro", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (ogIntro == MessageBoxResult.Yes)
+            {
+                using (RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher"))
+                {
+                    if (keyFSL != null)
+                    {
+                        Object obGRFSPath = keyFSL.GetValue("GRFSPath");
+                        if (obGRFSPath != null)
+                        {
+                            gamePath = (obGRFSPath as String);
+                        }
+
+                        keyFSL.Close();
+                    }
+                }
+
+                try
+                {
+                    pb.Visibility = Visibility.Visible;
+                    pb.IsIndeterminate = false;
+
+                    Directory.CreateDirectory(fsTemp);
+                    Directory.CreateDirectory(Path.Combine(fsTemp, "NoIntro"));
+
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(OGIntroCallback);
+                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                    webClient.DownloadFileAsync(new Uri("https://github.com/KilLo445/FS-Launcher/raw/master/FS-Launcher/files/nointro/OriginalLogos.bin"), ogLogosBin);
+                }
+                catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            }
+            else { return; }
+        }
+
+        private void OGIntroCallback(object sender, AsyncCompletedEventArgs e)
+        {
+            try
+            {
+                File.Delete(Path.Combine(gamePath, "Video", "SPL_ESRB_UBI_CLANCY.bik"));
+                File.Delete(Path.Combine(gamePath, "Video", "SPL_Intro_Trailer.bik"));
+                File.Delete(Path.Combine(gamePath, "Video", "SPL_RSE_Logo_fade.bik"));
+
+                ExtractZipAsync(ogLogosBin, Path.Combine(gamePath, "Video"));
             }
             catch (Exception ex) { MessageBox.Show($"{ex}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
@@ -307,6 +408,11 @@ namespace FS_Launcher
                 MessageBox.Show($"Error launching as admin.\nPlease accept admin prompt.\n\nFile: {adminFileName}", "Error");
                 return;
             }
+        }
+
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            pb.Value = e.ProgressPercentage;
         }
     }
 }

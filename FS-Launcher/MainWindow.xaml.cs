@@ -17,7 +17,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.2.0";
+        string launcherVersion = "1.2.1";
 
         // Paths
         private string rootPath;
