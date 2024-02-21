@@ -1,5 +1,9 @@
-# ONLINE SERVICES SHUTTING DOWN
-Ubisoft has sadly announced that the online services for Ghost Recon: Future Soldier (As well as some other games) will be shut in in January 2024. So unfortunately this launcher will become pointless. Read more [here](https://news.ubisoft.com/en-us/article/64NYEKbdiuRMqFE0YXvWCN/decommissioning-some-online-services-in-january).
+# Important Announcement
+By some miracle, the game still works.  
+But, features that help get multiplayer working have been disabled, as the way you get it to work has changed completely and would be very difficult for me to code into the launcher.  
+I recommend right clicking on the firewall and deleting your rule, and undo the Hosts entries if you added them.  
+Other features such as NoIntro and DLC Unlocker still work, so I'm not going to kill the launcher completely.  
+And plus, you never know, maybe one day it will be useful again.  
 
 # Future Soldier Launcher  
 FS Launcher, or Future Soldier Launcher is a launcher to help get Tom Clancy's Ghost Recon: Future Soldier multiplayer working. As it can be annoying, so this program aims at helping out.  

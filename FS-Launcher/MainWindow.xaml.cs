@@ -17,7 +17,7 @@ namespace FS_Launcher
 {
     public partial class MainWindow : Window
     {
-        string launcherVersion = "1.2.1";
+        string launcherVersion = "1.2.2";
 
         // Paths
         private string rootPath;
@@ -59,6 +59,7 @@ namespace FS_Launcher
             var principal = new WindowsPrincipal(identity);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
+        bool startupMessagesSeen = false;
 
         // Other Stuff
         string dlc1;
@@ -66,6 +67,7 @@ namespace FS_Launcher
         string dlc3;
         string strFirewall;
         string strDLC;
+        string startupMessages;
 
         public MainWindow()
         {
@@ -96,6 +98,7 @@ namespace FS_Launcher
             FirstRun();
             CheckShiftKey();
             GetCFG();
+            StartupMessgaes();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -160,6 +163,13 @@ namespace FS_Launcher
             {
                 if (keyFSL != null)
                 {
+                    // Startup Messages
+                    Object obMessages = keyFSL.GetValue("StartupMessages");
+                    if (obMessages != null)
+                    {
+                        startupMessages = (obMessages as String);
+                    }
+
                     // Game Path
                     Object obGRFSPath = keyFSL.GetValue("GRFSPath");
                     if (obGRFSPath != null)
@@ -191,6 +201,35 @@ namespace FS_Launcher
                 MessageBox.Show("Resetting FS Launcher is now done through the extas menu.", "Reset FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
+        }
+
+        private void StartupMessgaes()
+        {
+            RegistryKey keyFSL = Registry.CurrentUser.OpenSubKey(@"Software\FS Launcher", true);
+            Object obMessages = keyFSL.GetValue("StartupMessages");
+
+            if (obMessages == null) { startupMessagesSeen = false; }
+            else
+            {
+                if (obMessages != null)
+                {
+                    startupMessages = (obMessages as String);
+                    if (startupMessages == "0") { startupMessagesSeen = false; }
+                    else { startupMessagesSeen = true; }
+                }
+            }
+
+            if (startupMessagesSeen == false)
+            {
+                MessageBox.Show("The features that help get multiplayer working have been disabled, as the way you get it to work has changed completely and would be very difficult for me to code into the launcher.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("I recommend right clicking on the firewall and deleting your rule, and undo the Hosts entries if you added them.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Other features such as NoIntro and DLC Unlocker still work, so I'm not going to kill the launcher completely.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("And plus, you never know, maybe one day it will be useful again.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("You will not see these messages next time you open FS Launcher, they will be available in the README.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Information);
+                keyFSL.SetValue("StartupMessages", "1");
+            }
+
+            keyFSL.Close();
         }
 
         private void FirstRun()
@@ -454,6 +493,9 @@ namespace FS_Launcher
 
         private void FirewallButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("This feature is temporarily disabled.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+
             MessageBoxResult firewallMessageBox1 = System.Windows.MessageBox.Show("Are you sure you want to setup the Firewall Rule in Windows?", "Firewall", System.Windows.MessageBoxButton.YesNo);
             if (firewallMessageBox1 == MessageBoxResult.Yes)
             {

@@ -220,6 +220,9 @@ namespace FS_Launcher
 
         private void HostsButton_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show("This feature is temporarily disabled.", "FS Launcher", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+
             if (IsAdministrator())
             {
                 MessageBox.Show("Please note:\n\nThis will create a backup of your hosts file, and if you undo these entries through the launcher, it will revert to your backup and remove any entries created after you created the backup.", "Hosts", MessageBoxButton.OK, MessageBoxImage.Exclamation);

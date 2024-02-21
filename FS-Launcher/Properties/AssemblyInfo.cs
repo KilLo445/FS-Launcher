@@ -7,8 +7,8 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Ghost Recon: Future Soldier Launcher")]
-[assembly: AssemblyDescription("Ghost Recon: Future Soldier Launcher")]
+[assembly: AssemblyTitle("FS Launcher")]
+[assembly: AssemblyDescription("Launcher for Ghost Recon: Future Soldier")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KilLo")]
 [assembly: AssemblyProduct("FS-Launcher")]
